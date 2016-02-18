@@ -60,9 +60,9 @@ n.question <- 3            # Number of questions in each test
 f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
 
 # Break latex file into a R list
-list.out <- rte.analize.tex.file <- function(f.in,
-                                latex.dir.out = latex.dir.out,
-                                pdf.dir.out = pdf.dir.out)
+list.out <- rte.analize.tex.file(f.in,
+                                 latex.dir.out = latex.dir.out,
+                                 pdf.dir.out = pdf.dir.out)
 
 # Build pdfs
 result.out <- rte.build.rdn.test(list.in = list.out,
@@ -71,9 +71,9 @@ result.out <- rte.build.rdn.test(list.in = list.out,
                                  n.question = n.question,
                                  latex.dir.out = latex.dir.out,
                                  pdf.dir.out = pdf.dir.out,
-                                 do.randomize.questions=T,
-                                 do.randomize.answers=T,
-                                 do.clean.up = T)
+                                 do.randomize.questions=TRUE,
+                                 do.randomize.answers=TRUE,
+                                 do.clean.up = TRUE)
 
 }
 

@@ -70,7 +70,7 @@ rte.compile.latex <- function(f.in,
   my.flag <- 0 #default value (other OS)
 
   if (my.os=='Windows'){
-    my.c<- sprintf('pdflatex -quiet -synctex=1 -interaction=nonstopmode %s -output-directory=%s\\',f.in, pdf.dir.out)
+    my.c<- sprintf('pdflatex -quiet -interaction=nonstopmode "%s" -output-directory=%s\\',f.in, pdf.dir.out)
     system(command = my.c, show.output.on.console = F)
   }
 
@@ -90,7 +90,7 @@ rte.compile.latex <- function(f.in,
   }
 
   if (my.flag==0){
-    browser()
+    #browser()
     stop(paste('Cant compile file', f.in,' with  pdflatex. You should check for sintax errors in the tex file and whether your',
                 'OS has miktex or texlive installed. This package was been tested on Windows 10 and linux mint.'))
     }

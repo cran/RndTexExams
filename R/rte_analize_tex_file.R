@@ -17,14 +17,16 @@
 #'   } \item{my.last.part}{All of the tex code AFTER the end of the multiple
 #'   choice enviroment } }
 #' @examples
-#' latex.dir.out <- 'latexOut' # Name of folder where latex files are going (will create if not exists)
+#' latex.dir.out <- 'latexOut' # Name of folder where latex files are going
+#'                             #(will create if it does not exists)
+#'
 #' pdf.dir.out <- 'PdfOut'     # Name of folder where resulting pdf files are going
 #'
 #' # Get latex example from package
 #' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
 #'
 #' # Break latex file into a R list
-#' list.out <- rte.analize.tex.file <- function(f.in,
+#' list.out <- rte.analize.tex.file(f.in,
 #'                                 latex.dir.out = latex.dir.out,
 #'                                 pdf.dir.out = pdf.dir.out)
 #'
