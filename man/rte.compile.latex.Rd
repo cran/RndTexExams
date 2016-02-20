@@ -15,15 +15,15 @@ rte.compile.latex(f.in, pdf.dir.out = "PdfOut")
 A flag, TRUE if the latex compilation was a sucess and FALSE if not
 }
 \description{
-This function will first check for the user's OS and then use the proper
+This function will first check for the flavor of latex, type of OS and then use the proper
 command for pdflatex compilation
 }
 \examples{
 f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
 pdf.dir.out <- 'PdfOut'
 
-\dontrun{rte.compile.latex <- function(f.in = f.in,
-                             pdf.dir.out =  pdf.dir.out) }
+rte.compile.latex(f.in = f.in,
+                 pdf.dir.out =  pdf.dir.out)
 
 }
 

@@ -17,9 +17,9 @@
 #' @param pdf.dir.out The name of the folder where the pdf files from the latex
 #'   compilation should go (will create if not found)
 #' @param do.randomize.questions Do you want the order of the questions to be
-#'   random?
+#'   random? (TRUE or FALSE)
 #' @param do.randomize.answers Do you want the order of the answers to be
-#'   random?
+#'   random? (TRUE or FALSE)
 #' @param do.clean.up Should R clean up all extra files from the LaTeX
 #'   compilations and leave only the pdf? (select FALSE if you want see the log
 #'   files from latex)
@@ -76,9 +76,9 @@ rte.build.rdn.test <- function(list.in,
 
   # error catching (pdftex not available)
 
-  my.pdftex.flag <- rte.check.system.command('pdflatex')
+  my.pdftex.flag <- rte.check.pdflatex()
 
-  if (my.pdftex.flag=='Not Ok'){
+  if (!my.pdftex.flag){
     stop('cant find pdflatex.exe! Check your latex installation and also if the command is available at userpath')
   }
 
@@ -93,6 +93,10 @@ rte.build.rdn.test <- function(list.in,
   my.begin.mchoice.line <- list.in$my.begin.mchoice.line
 
   df.out <- data.frame()
+
+  cat('\nrte: pdflatex flavor:', rte.check.latex.flavor())
+  cat('\nrte: Type of OS:', rte.check.my.os())
+
 
   for (i.test in seq(1,n.test)){
 
@@ -262,7 +266,7 @@ rte.build.rdn.test <- function(list.in,
     if (length(my.temp.files)!=0) file.remove(my.temp.files)
   }
 
-  cat('\nrte: FINISHED - Check folder', pdf.dir.out, 'for all pdf files with the tests')
+  cat('\nrte: FINISHED - Check folder', pdf.dir.out, 'for pdf files')
 
   answer.sheet <- data.table::dcast(data = data.table::data.table(df.out),
                         formula = n.test  ~ n.question,

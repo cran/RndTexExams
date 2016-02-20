@@ -14,7 +14,7 @@
 #'   data.frame with all answers} \item{my.begin.mchoice.line}{text with
 #'   beggining of mchoice enviroment} \item{my.preamble}{preamble of tex file,
 #'   including everything before the beggining of the multiple choice enviroment
-#'   } \item{my.last.part}{All of the tex code AFTER the end of the multiple
+#'   } \item{my.last.part}{All of the tex code after the end of the multiple
 #'   choice enviroment } }
 #' @examples
 #' latex.dir.out <- 'latexOut' # Name of folder where latex files are going
@@ -59,12 +59,12 @@ rte.analize.tex.file <- function(f.in,
 
   # error catching (check if .tex is compilable)
 
-  rte.compile.latex(f.in = f.in, pdf.dir.out = latex.dir.out)
+  #rte.compile.latex(f.in = f.in, pdf.dir.out = latex.dir.out)
 
   # clean up after compiling tex file
 
-  my.temp.files <- dir(latex.dir.out, pattern = '*.*', full.names = T)
-  if (length(my.temp.files)!=0) file.remove(my.temp.files)
+  #my.temp.files <- dir(latex.dir.out, pattern = '*.*', full.names = T)
+  #if (length(my.temp.files)!=0) file.remove(my.temp.files)
 
   # read tex file
 

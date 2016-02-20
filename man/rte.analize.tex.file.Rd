@@ -23,7 +23,7 @@ A list that represents the tex file with preamble, questions, answers
   data.frame with all answers} \item{my.begin.mchoice.line}{text with
   beggining of mchoice enviroment} \item{my.preamble}{preamble of tex file,
   including everything before the beggining of the multiple choice enviroment
-  } \item{my.last.part}{All of the tex code AFTER the end of the multiple
+  } \item{my.last.part}{All of the tex code after the end of the multiple
   choice enviroment } }
 }
 \description{

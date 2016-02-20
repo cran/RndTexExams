@@ -28,10 +28,10 @@ compilation should go (will create if not found)}
 compilation should go (will create if not found)}
 
 \item{do.randomize.questions}{Do you want the order of the questions to be
-random?}
+random? (TRUE or FALSE)}
 
 \item{do.randomize.answers}{Do you want the order of the answers to be
-random?}
+random? (TRUE or FALSE)}
 
 \item{do.clean.up}{Should R clean up all extra files from the LaTeX
 compilations and leave only the pdf? (select FALSE if you want see the log

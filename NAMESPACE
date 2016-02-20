@@ -2,6 +2,7 @@
 
 export(rte.analize.tex.file)
 export(rte.build.rdn.test)
+export(rte.check.latex.flavor)
 export(rte.check.my.os)
-export(rte.check.system.command)
+export(rte.check.pdflatex)
 export(rte.compile.latex)

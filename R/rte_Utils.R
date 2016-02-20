@@ -1,33 +1,41 @@
-#' Function to check if system command is available
+#' Function to check the distribution of LaTeX
 #'
-#' @param mycommand A system command (e.g. pdflatex inputfile.tex)
-#' @return A flag, TRUE if the command is available  or FALSE if not)
+#' @return The flavor of latex instlation (e.g. miktex, texlive)
 #' @examples
-#' rte.check.system.command('pdflatex')
+#' rte.check.latex.flavor()
 #'
 #' @export
-rte.check.system.command <-function(mycommand){
+rte.check.latex.flavor <-function(){
 
-  # check windows or linux
+  # check latex flavor
 
-  my.sys <- rte.check.my.os()
+  str.out <- system(command = 'pdflatex --version', intern = T)[1]
 
-  flag <- 0
+  flavor.latex <- 'unknown'
+  if (stringr::str_detect(str.out, stringr::fixed('MiKTeX'))) flavor.latex <- 'miktex'
+  if (stringr::str_detect(str.out, stringr::fixed('TeX Live'))) flavor.latex <- 'texlive'
+  if (stringr::str_detect(str.out, stringr::fixed('MacTeX'))) flavor.latex <- 'mactex'
 
-  if (my.sys=='Windows'){
-    flag <- system(paste('where',mycommand),
-                   show.output.on.console = F,
-                   intern = F,
-                   ignore.stderr = T,
-                   ignore.stdout = T)
-  }
+  return(flavor.latex)
 
-  if (my.sys=='Linux'){
-    flag <-  system(paste('which', mycommand), ignore.stdout = T )
-  }
+}
 
-  if (flag==0) return('OK')
-  if (flag==1) return('Not Ok')
+#' Function to check if system has pdflatex.exe available
+#'
+#' @return TRUE if the pdflatex is available, FALSE if not
+#' @examples
+#' rte.check.pdflatex()
+#'
+#' @export
+rte.check.pdflatex <-function(){
+
+  flag <- FALSE
+
+  try({system('pdflatex -version', intern = T)
+       flag <- TRUE}, silent = T)
+
+
+  return(flag)
 }
 
 #' Function to check operating system of user
@@ -41,12 +49,12 @@ rte.check.my.os <-function(){
 
   my.sys <- Sys.info()
 
-  return(my.sys['sysname']) # check if its windows or linux
+  return(my.sys['sysname']) # check OS
 }
 
 #' Function to compile a LaTeX file
 #'
-#' This function will first check for the user's OS and then use the proper
+#' This function will first check for the flavor of latex, type of OS and then use the proper
 #' command for pdflatex compilation
 #'
 #' @param f.in The location and name of latex file
@@ -56,8 +64,8 @@ rte.check.my.os <-function(){
 #' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
 #' pdf.dir.out <- 'PdfOut'
 #'
-#' \dontrun{rte.compile.latex <- function(f.in = f.in,
-#'                              pdf.dir.out =  pdf.dir.out) }
+#' rte.compile.latex(f.in = f.in,
+#'                  pdf.dir.out =  pdf.dir.out)
 #'
 #' @export
 rte.compile.latex <- function(f.in,
@@ -67,33 +75,38 @@ rte.compile.latex <- function(f.in,
 
   my.os <- rte.check.my.os()
 
-  my.flag <- 0 #default value (other OS)
-
-  if (my.os=='Windows'){
-    my.c<- sprintf('pdflatex -quiet -interaction=nonstopmode "%s" -output-directory=%s\\',f.in, pdf.dir.out)
-    system(command = my.c, show.output.on.console = F)
+  if (!rte.check.pdflatex()){
+    stop('Cant find pdflatex.exe. Make sure you have a flavor of LaTeX installed in your OS.')
   }
 
-  if (my.os =='Linux'){
+  my.latex.flavor <- rte.check.latex.flavor()
 
-    my.c <- sprintf('pdflatex -output-directory=%s -interaction=nonstopmode %s >/dev/null', pdf.dir.out, f.in)
+  if (my.latex.flavor =='miktex'){
+    # for miktex, use -quiet
+    my.c<- sprintf('pdflatex -quiet -interaction=batchmode -output-directory="%s" "%s"',pdf.dir.out, f.in)
+  }
+
+  if (any(my.latex.flavor ==c('texlive','mactex','unknown'))){
+    # for texlive, mactex or unknown, use only batchmode
+    my.c <- sprintf('pdflatex -interaction=batchmode -output-directory="%s" "%s"', pdf.dir.out, f.in)
+  }
+
+  if (my.os == 'Windows'){
+    # use show.output.on.console for Windows
+    system(command = my.c, show.output.on.console = F)
+  } else {
     system(command = my.c)
-
   }
 
   # remove path and extension for checking pdf
 
   file.name.noext <- basename(tools::file_path_sans_ext(f.in))
 
-  if (file.exists(paste0(pdf.dir.out, '/', file.name.noext, '.pdf'))){
-    my.flag<-1
+  # Check if pdf file exists
+  if (!file.exists(paste0(pdf.dir.out, '/', file.name.noext, '.pdf'))){
+    stop(paste('Cant find compiled pdf file with  pdflatex. You should check for sintax errors in the tex file and whether your',
+               'OS has a flavor of latex installed.'))
   }
-
-  if (my.flag==0){
-    #browser()
-    stop(paste('Cant compile file', f.in,' with  pdflatex. You should check for sintax errors in the tex file and whether your',
-                'OS has miktex or texlive installed. This package was been tested on Windows 10 and linux mint.'))
-    }
 
 
 }
