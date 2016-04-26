@@ -7,43 +7,57 @@
 <meta charset="utf-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2016-02-19" />
+<meta name="date" content="2016-04-25" />
 
-<title>Creating Random Exams with RndTexExams</title>
+<title>Creating and grading randomized exams with RndTexExams</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
+div.sourceCode { overflow-x: auto; }
 table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
   margin: 0; padding: 0; vertical-align: baseline; border: none; }
 table.sourceCode { width: 100%; line-height: 100%; }
 td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
 td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; }
-code > span.dt { color: #902000; }
-code > span.dv { color: #40a070; }
-code > span.bn { color: #40a070; }
-code > span.fl { color: #40a070; }
-code > span.ch { color: #4070a0; }
-code > span.st { color: #4070a0; }
-code > span.co { color: #60a0b0; font-style: italic; }
-code > span.ot { color: #007020; }
-code > span.al { color: #ff0000; font-weight: bold; }
-code > span.fu { color: #06287e; }
-code > span.er { color: #ff0000; font-weight: bold; }
-</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 </style>
 
 
-<link href="data:text/css,body%20%7B%0A%20%20background%2Dcolor%3A%20%23fff%3B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20max%2Dwidth%3A%20700px%3B%0A%20%20overflow%3A%20visible%3B%0A%20%20padding%2Dleft%3A%202em%3B%0A%20%20padding%2Dright%3A%202em%3B%0A%20%20font%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0A%20%20font%2Dsize%3A%2014px%3B%0A%20%20line%2Dheight%3A%201%2E35%3B%0A%7D%0A%0A%23header%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0A%0A%23TOC%20%7B%0A%20%20clear%3A%20both%3B%0A%20%20margin%3A%200%200%2010px%2010px%3B%0A%20%20padding%3A%204px%3B%0A%20%20width%3A%20400px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20border%2Dradius%3A%205px%3B%0A%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20font%2Dsize%3A%2013px%3B%0A%20%20line%2Dheight%3A%201%2E3%3B%0A%7D%0A%20%20%23TOC%20%2Etoctitle%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%20%20font%2Dsize%3A%2015px%3B%0A%20%20%20%20margin%2Dleft%3A%205px%3B%0A%20%20%7D%0A%0A%20%20%23TOC%20ul%20%7B%0A%20%20%20%20padding%2Dleft%3A%2040px%3B%0A%20%20%20%20margin%2Dleft%3A%20%2D1%2E5em%3B%0A%20%20%20%20margin%2Dtop%3A%205px%3B%0A%20%20%20%20margin%2Dbottom%3A%205px%3B%0A%20%20%7D%0A%20%20%23TOC%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dleft%3A%20%2D2em%3B%0A%20%20%7D%0A%20%20%23TOC%20li%20%7B%0A%20%20%20%20line%2Dheight%3A%2016px%3B%0A%20%20%7D%0A%0Atable%20%7B%0A%20%20margin%3A%201em%20auto%3B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dcolor%3A%20%23DDDDDD%3B%0A%20%20border%2Dstyle%3A%20outset%3B%0A%20%20border%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0A%20%20border%2Dwidth%3A%202px%3B%0A%20%20padding%3A%205px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0A%20%20border%2Dwidth%3A%201px%3B%0A%20%20border%2Dstyle%3A%20inset%3B%0A%20%20line%2Dheight%3A%2018px%3B%0A%20%20padding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0A%20%20border%2Dleft%2Dstyle%3A%20none%3B%0A%20%20border%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Ap%20%7B%0A%20%20margin%3A%200%2E5em%200%3B%0A%7D%0A%0Ablockquote%20%7B%0A%20%20background%2Dcolor%3A%20%23f6f6f6%3B%0A%20%20padding%3A%200%2E25em%200%2E75em%3B%0A%7D%0A%0Ahr%20%7B%0A%20%20border%2Dstyle%3A%20solid%3B%0A%20%20border%3A%20none%3B%0A%20%20border%2Dtop%3A%201px%20solid%20%23777%3B%0A%20%20margin%3A%2028px%200%3B%0A%7D%0A%0Adl%20%7B%0A%20%20margin%2Dleft%3A%200%3B%0A%7D%0A%20%20dl%20dd%20%7B%0A%20%20%20%20margin%2Dbottom%3A%2013px%3B%0A%20%20%20%20margin%2Dleft%3A%2013px%3B%0A%20%20%7D%0A%20%20dl%20dt%20%7B%0A%20%20%20%20font%2Dweight%3A%20bold%3B%0A%20%20%7D%0A%0Aul%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%7D%0A%20%20ul%20li%20%7B%0A%20%20%20%20list%2Dstyle%3A%20circle%20outside%3B%0A%20%20%7D%0A%20%20ul%20ul%20%7B%0A%20%20%20%20margin%2Dbottom%3A%200%3B%0A%20%20%7D%0A%0Apre%2C%20code%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20color%3A%20%23333%3B%0A%7D%0Apre%20%7B%0A%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%20%20%20%2F%2A%20Wrap%20long%20lines%20%2A%2F%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20margin%3A%205px%200px%2010px%200px%3B%0A%20%20padding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0A%20%20background%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Acode%20%7B%0A%20%20font%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0A%20%20font%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0A%20%20padding%3A%202px%200px%3B%0A%7D%0A%0Adiv%2Efigure%20%7B%0A%20%20text%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0A%20%20background%2Dcolor%3A%20%23FFFFFF%3B%0A%20%20padding%3A%202px%3B%0A%20%20border%3A%201px%20solid%20%23DDDDDD%3B%0A%20%20border%2Dradius%3A%203px%3B%0A%20%20border%3A%201px%20solid%20%23CCCCCC%3B%0A%20%20margin%3A%200%205px%3B%0A%7D%0A%0Ah1%20%7B%0A%20%20margin%2Dtop%3A%200%3B%0A%20%20font%2Dsize%3A%2035px%3B%0A%20%20line%2Dheight%3A%2040px%3B%0A%7D%0A%0Ah2%20%7B%0A%20%20border%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20padding%2Dbottom%3A%202px%3B%0A%20%20font%2Dsize%3A%20145%25%3B%0A%7D%0A%0Ah3%20%7B%0A%20%20border%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0A%20%20padding%2Dtop%3A%2010px%3B%0A%20%20font%2Dsize%3A%20120%25%3B%0A%7D%0A%0Ah4%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0A%20%20margin%2Dleft%3A%208px%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Ah5%2C%20h6%20%7B%0A%20%20border%2Dbottom%3A%201px%20solid%20%23ccc%3B%0A%20%20font%2Dsize%3A%20105%25%3B%0A%7D%0A%0Aa%20%7B%0A%20%20color%3A%20%230033dd%3B%0A%20%20text%2Ddecoration%3A%20none%3B%0A%7D%0A%20%20a%3Ahover%20%7B%0A%20%20%20%20color%3A%20%236666ff%3B%20%7D%0A%20%20a%3Avisited%20%7B%0A%20%20%20%20color%3A%20%23800080%3B%20%7D%0A%20%20a%3Avisited%3Ahover%20%7B%0A%20%20%20%20color%3A%20%23BB00BB%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20a%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0A%20%20%20%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%0A%2F%2A%20Class%20described%20in%20https%3A%2F%2Fbenjeffrey%2Ecom%2Fposts%2Fpandoc%2Dsyntax%2Dhighlighting%2Dcss%0A%20%20%20Colours%20from%20https%3A%2F%2Fgist%2Egithub%2Ecom%2Frobsimmons%2F1172277%20%2A%2F%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Keyword%20%2A%2F%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%2F%2A%20DataType%20%2A%2F%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%2F%2A%20DecVal%20%28decimal%20values%29%20%2A%2F%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20BaseN%20%2A%2F%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Float%20%2A%2F%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20Char%20%2A%2F%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%2F%2A%20String%20%2A%2F%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%2F%2A%20Comment%20%2A%2F%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%2F%2A%20OtherToken%20%2A%2F%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20AlertToken%20%2A%2F%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%2F%2A%20Function%20calls%20%2A%2F%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%2F%2A%20ErrorTok%20%2A%2F%0A%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -51,39 +65,51 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 
 
-<div id="header">
-<h1 class="title">Creating Random Exams with RndTexExams</h1>
+<div class="fluid-row" id="header">
+
+
+<h1 class="title">Creating and grading randomized exams with RndTexExams</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2016-02-19</em></h4>
+<h4 class="date"><em>2016-04-25</em></h4>
+
 </div>
 
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>The package RndTexExams builds random tests using R and latex. The R code will take as input a latex file and randomly define, for all of the multiple choice questions, the order of the questions, the order of the answers, and the correct answers. The user can also change the content of the questions in each version.</p>
-<p>The main target audience of this code is composed of teachers and instructors that are considering minimizing cheating in their exams. Based on this package and a database of questions, one can build an unique test and answer sheet for each student in the class, therefore making it nearly impossible to cheat by looking around.</p>
-<p>The code is built around the stable framework of <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>. Users that are not familiar with <a href="https://www.latex-project.org/">LaTeX</a> or <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>, I strongly advice to read the manual before using RndTexExams.</p>
+<p>The package RndTexExams creates exams with randomized content using R and latex. The R code will take as input a latex file and randomly define, for all of the multiple choice questions, the order of the questions and the order of the answers. The user can also change the content of the questions in each version.</p>
+<p>The main target audience of this code is composed of examiners that are considering minimizing cheating in their exams. Based on this package and a database of questions, one can build an unique test and answer sheet for each student in the class, therefore making it nearly impossible to cheat by looking around or sharing the answer sheet. The use of the package with a cloud based spreadsheet tool also makes it possible to grade the exams digitally, without any manual intervention. This is a great feature that minimizes grading work in large classes.</p>
+<p>The code is built around the stable framework of <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>. Users that are not familiar with <a href="https://www.latex-project.org/">LaTeX</a> or <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>, I strongly advice to read both manuals before using RndTexExams.</p>
 </div>
 <div id="how-to-use-rndtexexams" class="section level1">
 <h1>How to use RndTexExams</h1>
-<div id="before-you-start-to-use" class="section level2">
-<h2>Before you start to use</h2>
-<p>In order to use RndTexExams you will need the install <a href="https://www.latex-project.org/">latex</a>. You have two choices, <a href="http://miktex.org/">miktex</a> and <a href="https://www.tug.org/texlive/">texlive</a>.</p>
-<p>Both are good choices and should work well with RndTexExams.</p>
+<div id="before-you-start" class="section level2">
+<h2>Before you start</h2>
+<p>In order to use RndTexExams you will need to install <a href="https://www.latex-project.org/">latex</a>. You have two main choices, <a href="http://miktex.org/">miktex</a> and <a href="https://www.tug.org/texlive/">texlive</a>. I also advice to use a nice IDE such as <a href="http://www.texstudio.org/">texstudio</a>.</p>
+<p>Miktex and texlive are good choices and should work well with RndTexExams. My advice for those first starting out in latex is to download the example file of the package from <a href="https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a#file-myrandomtest-tex">here</a> and compile it using your flavor of latex.</p>
 </div>
 <div id="how-to-write-questions-with-examdesign-and-rndtexexams" class="section level2">
 <h2>How to write questions with examdesign and RndTexExams</h2>
-<p>In <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>, the multiple answer part of the test will be encapsulated by commands <code>\begin{multiplechoice}</code> and <code>\end{multiplechoice}</code>. Within this environment, all questions will begin with <code>\begin{question}</code> and end with <code>\end{question}</code>. The multiple answers of the questions are marked as <code>\choice{}</code>.</p>
-<p>Next I show an example of a question in examdesign:</p>
-<pre class="sourceCode latex"><code class="sourceCode latex"><span class="co">% Example of a multiple choice question in examdesign (only one version)</span>
+<p>A standard multiple choice exam is compose of several questions that have a main text and a set of alternative answers to choose from.A simple example is:</p>
+<p> </p>
+<p><em>Given the next five options, which one is the correct answer?</em></p>
+<p><em>a) Choice 1</em></p>
+<p><em>b) Choice 2</em></p>
+<p><em>c) Choice 3</em></p>
+<p><em>d) Choice 4</em></p>
+<p><em>e) Choice 5 - The CORRECT answer!</em></p>
+<p> </p>
+<p>In <a href="https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign">examdesign</a>, the structure of a multiple choice question is defined using latex commands. The start of the multiple answer section is encapsulated by commands <code>\begin{multiplechoice}</code> and <code>\end{multiplechoice}</code>. Within this environment, all questions begin with <code>\begin{question}</code> and end with <code>\end{question}</code>. The multiple answers of the questions are marked as <code>\choice{}</code>.</p>
+<p>Next I show the latex code that results in the previous example:</p>
+<div class="sourceCode"><pre class="sourceCode latex"><code class="sourceCode latex"><span class="co">% Example of a multiple choice question in examdesign (only one version)</span>
 <span class="co">% The preamble and the rest of the document are ommited for simplification. </span>
-<span class="co">% Be aware that this simple code as it is will NOT compile in pdflatex as it needs other parts</span>
+<span class="co">% Be aware that this simple code as it is will NOT compile in pdflatex as it needs other requirements</span>
 
-\begin{multiplechoice}[resetcounter=no,  examcolumns=1]
+\begin{multiplechoice}
 
 \begin{question}
     
-    Given the next five options, which on is the correct answer?
+    Given the next five options, which one is the correct answer?
     
     \choice{Choice 1}
     \choice{Choice 2}
@@ -93,33 +119,36 @@ code > span.er { color: #ff0000; font-weight: bold; }
     
 \end{question} 
 
-\end{multiplechoice}</code></pre>
-<p>Notice from this simple example that each question has a main text and choices. The right answer of the question is marked with the symbol <code>[!]</code> as in <code>\choice[!]{text of answer here}</code>. The right answer for each question can be later used to build a version of the test with the correct answers for all questions. The option for printing the answer sheet is very useful for grading. You can easilly switch it in the latex file by using the command <code>\NoKey</code>.</p>
-<div id="changing-the-text-between-versions" class="section level3">
-<h3>Changing the text between versions</h3>
-<p>The package RndTexExams uses switches with specific symbols in order to define parts of the questions that can change in between versions. Any change in the text, whether it is in the main text of the question or text of the answers, is marked with symbol <code>@{text in ver 1}|{text in ver 2}{text in ver 3}@</code>.</p>
-<p>Making it clear, each version of the test will show the text according to its position. So, in version one it will show the text <code>text in ver 1</code>, in version two it will show the text <code>text in ver 1</code> and so on. The version of the content changes every time that R and LaTeX compiles a new test.</p>
+\end{multiplechoice}</code></pre></div>
+<p>Notice from this simple example that each question has a main text and choices. The right answer of the question is marked with the symbol <code>[!]</code> as in <code>\choice[!]{text of answer here}</code>. The right answer for each question can be later used to build a version of the test with the correct answers for all questions.</p>
+<p>The package RndTexExams will read the latex file, search for all ocurrences of a multiple choice question then randomly rearrange the order of questions and alternatives, building a new latex file for each of the version of the exam. Therefore, each version of the test will have a different answer sheet. The latex files are later compiled from R, resulting in a set of pdf files that are ready for printing.</p>
+<div id="changing-the-textual-content-of-the-exam" class="section level3">
+<h3>Changing the textual content of the exam</h3>
+<p>The package RndTexExams can use textual switches with specific symbols in order to define parts of the questions that can change in between versions. This is an optional feature for those examiners that wish to create different versions of the same questions.</p>
+<p>Any change in the text, whether it is in the main text of the question or text of the answers, is marked with symbol <code>@{text in ver 1}|{text in ver 2}|{text in ver 3}@</code>. Making it clear, each version of the test will show the text according to its position. So, in version one it will show the text <code>text in ver 1</code>, in version two it will show the text <code>text in ver 2</code> and so on. The version of the content changes every time that R and LaTeX compiles a new test.</p>
 <p>Since we are changing the text of the questions and answers, it is also necessary to change the correct answers in each version. To do this, simply add the symbol <code>[x]</code> in the text of the answers, where <code>x</code> is the version in which the alternative is correct.</p>
 <p>As an example, we can make different versions of the previous example question by using the following latex code with RndTexExams:</p>
-<pre class="sourceCode latex"><code class="sourceCode latex"><span class="co">% Example of multiple choice question in examdesign, with 2 versions</span>
+<div class="sourceCode"><pre class="sourceCode latex"><code class="sourceCode latex"><span class="co">% Example of multiple choice question in examdesign, with 2 versions</span>
 \begin{multiplechoice}[resetcounter=no,  examcolumns=1]
 
 \begin{question}
     
-    Given the next five options, which is the correct answer in @{version 1}|{version 2}@?
+    Given the next five options, which one is the correct answer in @{version 1}|{version 2}@?
     
-    \choice{Choice 1}
-    \choice{[2] Choice 2 - @{incorrect in version 1}|{correct in versin 2}@ }
-    \choice{Choice 3}
-    \choice{Choice 4}
-    \choice{[1] Choice 5 - @{correct in version 1}|{incorrect in version 2}@ }
+    \choice{Choice 1 - Incorrect in all versions}
+    \choice{[2] Choice 2 - @{Incorrect in version 1}|{Correct in versin 2}@ }
+    \choice{Choice 3 - Incorrect in all versions}
+    \choice{Choice 4 - Incorrect in all versions}
+    \choice{[1] Choice 5 - @{Correct in version 1}|{Incorrect in version 2}@ }
     
 \end{question} 
 
-\end{multiplechoice}</code></pre>
-<p>And thats it! Once you have your questions with the proper syntax for using with RndTexExams, all you need to do is to pass the tex file to function <code>rte.analize.tex.file</code>. In the next example we are going to use an example latex file from the package:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RndTexExams)
+\end{multiplechoice}</code></pre></div>
+<p>And thats it! The R code in RndTexExam will look for these simbolic expressions and randomly choose one of them for the final version of each exam.</p>
+<p>Once you have your questions with the proper syntax for using with RndTexExams, all you need to do is to pass the tex file to functions <code>rte.analize.tex.file</code> and later to <code>rte.build.rdn.test</code>. Next, I present the use of RndTexExam with an example latex file from the package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RndTexExams)
 
+<span class="kw">set.seed</span>(<span class="dv">10</span>)
 
 <span class="co"># Get latex file from package</span>
 f.in &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;MyRandomTest.tex&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;RndTexExams&quot;</span>)
@@ -127,26 +156,26 @@ f.in &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span cla
 <span class="co"># Breakdown latex file into a a list </span>
 list.out &lt;-<span class="st"> </span><span class="kw">rte.analize.tex.file</span>(f.in,
                                  <span class="dt">latex.dir.out =</span> <span class="st">'latexOut'</span>,
-                                 <span class="dt">pdf.dir.out =</span> <span class="st">'PdfOut'</span>) </code></pre>
+                                 <span class="dt">pdf.dir.out =</span> <span class="st">'PdfOut'</span>) </code></pre></div>
 <pre><code>## 
 ## rte: Changing LaTeX file into dataframe... Done</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Options for build.rdn.test</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Options for build.rdn.test</span>
 list.in &lt;-<span class="st"> </span>list.out       <span class="co"># output from rte.analize.tex.file</span>
-f.out &lt;-<span class="st"> 'MyRandomTest_'</span>  <span class="co"># pattern for names of pdf</span>
-n.test &lt;-<span class="st"> </span><span class="dv">10</span>              <span class="co"># number of random tests </span>
-n.question &lt;-<span class="st"> </span><span class="dv">3</span>           <span class="co"># number of questions in each test</span>
-pdf.dir.out &lt;-<span class="st"> 'PdfOut'</span>   <span class="co"># directory for output</span>
+f.out &lt;-<span class="st"> 'MyRandomTest_'</span>  <span class="co"># pattern for names of pdfs</span>
+n.test &lt;-<span class="st"> </span><span class="dv">10</span>            <span class="co"># number of random tests (usually the number of students) </span>
+n.question &lt;-<span class="st"> </span><span class="dv">4</span>           <span class="co"># number of questions in each test </span>
+pdf.dir.out &lt;-<span class="st"> 'PdfOut'</span>   <span class="co"># directory for pdf output</span>
 
 <span class="co"># Builds pdfs</span>
-out &lt;-<span class="st"> </span><span class="kw">rte.build.rdn.test</span>(<span class="dt">list.in =</span> list.in,
-                          <span class="dt">f.out =</span> f.out,
-                          <span class="dt">n.test =</span> n.test,
-                          <span class="dt">n.question =</span> n.question,
-                          <span class="dt">pdf.dir.out =</span> pdf.dir.out) </code></pre>
+list.build.rdn.exam &lt;-<span class="st"> </span><span class="kw">rte.build.rdn.test</span>(<span class="dt">list.in =</span> list.in,
+                                          <span class="dt">f.out =</span> f.out,
+                                          <span class="dt">n.test =</span> n.test,
+                                          <span class="dt">n.question =</span> n.question,
+                                          <span class="dt">pdf.dir.out =</span> pdf.dir.out) </code></pre></div>
 <pre><code>## 
 ## rte: Checking for error in inputs... Done
-## rte: pdflatex flavor: texlive
-## rte: Type of OS: Linux
+## rte: pdflatex flavor: miktex
+## rte: Type of OS: Windows
 ## rte: Building Test #1...Done
 ## rte: Building Test #2...Done
 ## rte: Building Test #3...Done
@@ -158,19 +187,124 @@ out &lt;-<span class="st"> </span><span class="kw">rte.build.rdn.test</span>(<sp
 ## rte: Building Test #9...Done
 ## rte: Building Test #10...Done
 ## rte: FINISHED - Check folder PdfOut for pdf files</code></pre>
-<p>The function <code>rte.analize.tex.file</code> will analyze the tex file and produce a R list with all of the details of the latex code. I encourage the user to open the resulting list to see how all of the code is broken down into pieces.</p>
-<p>The function <code>rte.build.rdn.test</code> will use the list to produce the pdf files by calling <code>pdflatex.exe</code> in order to compile the resulting latex files.</p>
+<p>The function <code>rte.analize.tex.file</code> will analyze the tex file and produce a R list with all of the details of the latex code. It will find and separate all of the multiple choice questions. I encourage the user to open the resulting list to see how all of the latex code is broken down into pieces.</p>
+<p>The function <code>rte.build.rdn.test</code> will use the output from <code>rte.analize.tex.file</code>, randomize all of the contents of the multiple choice questions and later paste together a new latex file used to compile the pdf files of the exam.</p>
+<p>The correct answer sheet for all versions is available in <code>list.build.rdn.exam$df.answer.wide</code>, where each row is the version of the test and the columns are the answers. This should be locally saved in order for later grading. I also advice to use function <code>set.seed()</code> so that every run of the code always results in the same <em>random</em> answer sheet.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(list.build.rdn.exam$answer.matrix)</code></pre></div>
+<pre><code>##            1   2   3   4  
+## Version 1  &quot;a&quot; &quot;d&quot; &quot;c&quot; &quot;b&quot;
+## Version 2  &quot;b&quot; &quot;e&quot; &quot;d&quot; &quot;b&quot;
+## Version 3  &quot;c&quot; &quot;c&quot; &quot;e&quot; &quot;b&quot;
+## Version 4  &quot;c&quot; &quot;d&quot; &quot;d&quot; &quot;d&quot;
+## Version 5  &quot;a&quot; &quot;a&quot; &quot;b&quot; &quot;a&quot;
+## Version 6  &quot;d&quot; &quot;b&quot; &quot;d&quot; &quot;a&quot;
+## Version 7  &quot;e&quot; &quot;a&quot; &quot;d&quot; &quot;d&quot;
+## Version 8  &quot;d&quot; &quot;d&quot; &quot;a&quot; &quot;e&quot;
+## Version 9  &quot;a&quot; &quot;e&quot; &quot;c&quot; &quot;a&quot;
+## Version 10 &quot;a&quot; &quot;a&quot; &quot;a&quot; &quot;d&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#write.csv(x = list.build.rdn.exam$answer.df, file = 'Answer_Matrix_csv')</span></code></pre></div>
 </div>
+</div>
+<div id="grading-exams" class="section level2">
+<h2>Grading exams</h2>
+<p>The package <code>RndTexExams</code> also makes it easy to grade exams using R. This is specially helpful when integrating the submission of the student’s answers with a cloud based spreadsheet service that allows the examiner to digitalize the answers of each student efficiently (details later).</p>
+<p>When examining a class with RndTexExam, one should have the following informations from the students:</p>
+<ul>
+<li>Names or ids of students in the test</li>
+<li>The version of the exam for each student. By default, the version of the exam is printed in right bottom corner of the pdf</li>
+<li>Names in the official registry, usually from the university system. These are the official names that will matter when registering the final grades. They are matched with the names provided in the test with function <code>amatch</code> from package <a href="https://cran.r-project.org/package=stringdist">stringdist</a></li>
+<li>The answers for each student (Q1 = ‘a’, Q2=‘b’, …)</li>
+<li>The grading score of each question (optional)</li>
+</ul>
+<p>The workflow of grading begins by identifying each student’s name with the name registered at the university system. After that, grading the exam is simply summing the number of correct answers weighted by the grading score of each question. The function <code>rte.grade.exams</code> will perform this calculation.</p>
+<p>In the next example I show the use of function <code>rte.grade.exams</code> with some random data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#set.seed(11)</span>
+
+<span class="co"># create some (almost) random names</span>
+my.names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'John'</span>, <span class="st">'Max'</span>,<span class="st">'Michael'</span>,<span class="st">'Marcelo'</span>,<span class="st">'Ricardo'</span>, <span class="st">'Tarcizio'</span>)
+
+<span class="co"># official names from the university system</span>
+official.names &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'John A.'</span>, <span class="st">'Max B.'</span>,<span class="st">'Michael C.'</span>,<span class="st">'Marcelo P.'</span>,<span class="st">'Ricardo P.'</span>,<span class="st">'Tarcizio P.'</span>)
+
+<span class="co"># version of the test for each student</span>
+ver.test &lt;-<span class="st"> </span><span class="kw">sample</span>(<span class="kw">seq</span>(<span class="dv">1</span>:<span class="kw">length</span>(my.names)))
+
+<span class="co"># number of simulated questions (same as before)</span>
+n.questions &lt;-<span class="st"> </span><span class="dv">4</span>
+
+<span class="co"># Get the correct answer sheet from previous code </span>
+correct.answer.sheet &lt;-<span class="st"> </span>list.build.rdn.exam$answer.matrix
+
+<span class="co"># create simulated answers from students (cheat a little bit!)</span>
+q.to.cheat &lt;-<span class="st"> </span><span class="kw">floor</span>(n.questions/<span class="dv">2</span>)  <span class="co"># get at least half of questions right!</span>
+my.answers &lt;-<span class="st"> </span><span class="kw">cbind</span>(correct.answer.sheet[ver.test,<span class="dv">1</span>:q.to.cheat], 
+                    <span class="kw">matrix</span>(<span class="kw">sample</span>(letters[<span class="dv">1</span>:<span class="dv">5</span>],                                          
+                                  <span class="dt">replace =</span> T,
+                                  <span class="dt">size =</span> <span class="kw">length</span>(my.names)*(n.questions-q.to.cheat)),
+                           <span class="dt">ncol =</span> n.questions-q.to.cheat ))
+
+<span class="co"># grade exams with rte.grade.exams </span>
+list.grade &lt;-<span class="st"> </span><span class="kw">rte.grade.exams</span>(<span class="dt">exam.names =</span> my.names,
+                              <span class="dt">official.names =</span> official.names,
+                              <span class="dt">exam.version =</span> ver.test, 
+                              <span class="dt">exam.answer.matrix =</span> my.answers,
+                              <span class="dt">list.build.rdn.exam =</span> list.build.rdn.exam)</code></pre></div>
+<p>Now we can plot the results of the grading process.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># print results in a bar plot</span>
+
+<span class="kw">library</span>(ggplot2)
+
+p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(list.grade$df.final.score, <span class="kw">aes</span>(<span class="dt">y =</span> final.score, <span class="dt">x =</span> official.names))
+p &lt;-<span class="st"> </span>p +<span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>)
+p &lt;-<span class="st"> </span>p +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))
+<span class="kw">print</span>(p)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p &lt;-<span class="st"> </span><span class="kw">ggplot</span>(list.grade$df.grade, <span class="kw">aes</span>(<span class="dt">y =</span> n.question, <span class="dt">x =</span> official.names, <span class="dt">fill =</span> grade.logical))
+p &lt;-<span class="st"> </span>p +<span class="st"> </span><span class="kw">geom_tile</span>()
+p &lt;-<span class="st"> </span>p +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">90</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))
+<span class="kw">print</span>(p)</code></pre></div>
+<p><img src="data:image/png;base64,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" alt /></p>
+</div>
+<div id="integrating-rndtexexam-with-google-spreadsheets" class="section level2">
+<h2>Integrating RndTexExam with google spreadsheets</h2>
+<p>The use of RndTexExam is optimized when using a cloud based spreadsheet tool to register the answers for the students. This avoid the manual work usually needed to digitalize the exams results. The package RndTexExam not only minimizes cheating but can also make the grading process painless.</p>
+<p>The cloud services I currently use and recomend is <a href="https://www.google.com/sheets/about/">Google Spreadsheets</a> and <a href="https://www.google.com/forms/about/">Google Forms</a>. Both are free and easy to use. Next I present the steps I suggest in order to build a random exam and grade it using a spreadsheet in the cloud.</p>
+<ol style="list-style-type: decimal">
+<li>Create a randomized exam with <code>rte.build.rdn.test</code>. Make sure you locally save the correct answer sheet for each version of the test (output <code>answer.matrix</code>). I also advice to use <code>set.seed()</code> in order to keep the same randomized content of the tests, just in case.</li>
+<li>Create a new form in Google Forms with the following questions (example <a href="http://goo.gl/forms/a0TiUXjfc4">here</a>:</li>
+</ol>
+<ul>
+<li>Name of Student (<em>short answer</em>)</li>
+<li>ID Card (optional) (<em>short answer</em>)</li>
+<li>Version of test (<em>short answer with numerical validation</em>)</li>
+<li>Answers of the test (<em>Multiple choice grid, row = Question number, col = alternatives (a,b,c,d,e)</em>)</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li><p>In the day of the test, deliver the printed exams from step 1 and inform the students of the link previously created in Google forms, step 2. The site <a href="http://tinyurl.com/">tinyurl</a> will help to create a customized human-readable link. I usually write the link in the blackboard so that only those that came to the exam can access it. Once the student finishes the exam, he/she can register their answers with their smartphones by accessing the link in a browser. I also bring a laptop with internet connection just in case that some students don’t have a smartphone. As a backup plan, make sure all students return the printed exams.</p></li>
+<li><p>Once all students have registered their answers, gain access to the spreadsheet in the cloud with package <a href="https://github.com/jennybc/googlesheets">googlesheets</a>. This way you can easily import the data from the cloud into R. I also advice to run a code to check the data in the cloud. Make sure that each student only has one registration and that the version of the test is unique for each. The link to the example spreadsheet previously created is <a href="https://docs.google.com/spreadsheets/d/1Z4nA6p2pPvMl1dPXh17KQg4FCteGCAlCiHxNgQ8309s/edit?usp=sharing">here</a>. Gaining access to the cloud should look something like this:</p></li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(googlesheets)
+
+<span class="kw">gs_auth</span>()   <span class="co"># will open a broswer for authentication</span>
+my.gs &lt;-<span class="st"> </span><span class="kw">gs_title</span>(<span class="dt">x =</span> <span class="st">'RndTexExam Example Form (respostas)'</span>) <span class="co"># or any title of spreadsheet</span>
+
+df.exam.answers &lt;-<span class="st"> </span><span class="kw">gs_read</span>(<span class="dt">ss =</span> my.gs)
+
+<span class="co"># ...</span>
+<span class="co"># rest of code for grading</span></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Use the information from the cloud and the correct answer sheet from step 1 with <code>rte.grade.exams</code> in order to grade the exams and calculate the final score for each.</li>
+</ol>
 </div>
 </div>
 <div id="getting-started-on-your-own-test" class="section level1">
 <h1>Getting started on your own test</h1>
 <p>The easiest way to get started on your own test is to use <a href="https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a">my example tex file</a> and change it to your needs. Do notice that some parts of the tex file are essential to RndTexExams. You can check these lines in the the comments of the example LaTeX file.</p>
 <p>Copy and paste the contents of the link into a new tex file, which we will assume is called <code>MyRandomTest.tex</code>. You can also download the gist file in R using:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">'Your path goes here'</span>)
-<span class="kw">download.file</span>(<span class="dt">url =</span> <span class="st">'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest.tex'</span>, <span class="dt">destfile =</span> <span class="st">'MyRandomTest.tex'</span> )</code></pre>
-<p>Once you have the LaTeX file, run the following script to build 5 random tests, each with 3 questions:</p>
-<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RndTexExams)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">'Your path goes here'</span>)
+<span class="kw">download.file</span>(<span class="dt">url =</span> <span class="st">'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest.tex'</span>, <span class="dt">destfile =</span> <span class="st">'MyRandomTest.tex'</span> )</code></pre></div>
+<p>Once you have the LaTeX file, run the following script to build 5 random tests, each with 4 questions:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(RndTexExams)
 
 my.d &lt;-<span class="st"> 'Your folder to the tex file here!'</span>
 <span class="kw">setwd</span>(my.d)
@@ -178,7 +312,7 @@ my.d &lt;-<span class="st"> 'Your folder to the tex file here!'</span>
 f.in &lt;-<span class="st"> 'MyRandomTest.tex'</span>
 f.out &lt;-<span class="st"> 'RandomTest-'</span>
 n.test &lt;-<span class="st"> </span><span class="dv">5</span>
-n.question &lt;-<span class="st"> </span><span class="dv">3</span>
+n.question &lt;-<span class="st"> </span><span class="dv">4</span>
 latex.dir.out &lt;-<span class="st"> 'latexOut'</span>
 pdf.dir.out &lt;-<span class="st"> 'PdfOut'</span>
 
@@ -190,7 +324,7 @@ out &lt;-<span class="st"> </span><span class="kw">rte.build.rdn.test</span>(<sp
                           <span class="dt">f.out =</span> f.out,
                           <span class="dt">n.test =</span> n.test,
                           <span class="dt">n.question =</span> n.question,
-                          <span class="dt">latex.dir.out =</span> latex.dir.out)                                 </code></pre>
+                          <span class="dt">latex.dir.out =</span> latex.dir.out)                                 </code></pre></div>
 <p>The five pdf files named RandomTest-1.pdf, RandomTest-2, and so on should be now available in folder <code>pdfOut</code>.</p>
 <div id="some-advices" class="section level2">
 <h2>Some advices</h2>
@@ -198,8 +332,7 @@ out &lt;-<span class="st"> </span><span class="kw">rte.build.rdn.test</span>(<sp
 <li><p>Always compile the source LaTeX files before using RndTexExams. This will help you to catch syntax problems. If the tex file is not compilable, R will thrown an error.</p></li>
 <li><p>Since each test will have its own pdf, it might be best to combine them into one pdf for easier printing. You can use <a href="https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/">pdftk</a> for that.</p></li>
 <li><p>The package will not modify any question outside of the multiple choice enviroment of the latex file. In the future I might address this issue by also alowing for the randomization of other types of questions besides multiple choice.</p></li>
-<li><p>By default, examdesign prints the answer sheet of each test. So, if you don’t need it, simply add <code>\NoKey</code> in the preamble of the latex file (see example file for details)</p></li>
-<li><p>Grading is also easy with RndTexExams. One of the outputs of <code>mrt.build.rdn.text()</code> is the answer sheet of all tests. You can grade all tests using R by building a Google form and sending the link to the students at the day of the test (I usually write in the whiteboard so that only those that came to the test can access it). With their smartphones they can fill 1) Name and card, 2) the number of their test and 3) their answers in all questions. Once they fill in the form, I access the resulting spreadsheet in the cloud by using <a href="https://github.com/jennybc/googlesheets">googlesheets</a>, use a partial matching algorithm from the <a href="https://cran.r-project.org/package=stringdist">stringdist</a>) package for comparing the name of the students in the test against the official names from the university system. After that, all you need to do is to compare the answer sheet of each student against the correct answers for the specific version of the test that he/she took. The results come out in less than a second, saving me around five hours of boring, tedious, dehumanizing grading work.</p></li>
+<li><p>By default, examdesign prints the answer sheet of each test. If you are printing the final version of exam, it is likelly that you don’t want the correct anwers printed in the exam! Simply add <code>\NoKey</code> in the preamble of the latex file. The example latex file is already configured this way.</p></li>
 </ul>
 </div>
 </div>

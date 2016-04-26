@@ -32,12 +32,12 @@ result.out <- rte.build.rdn.test(list.in = list.out,
                                  do.clean.up = T)
 
 
-nrow.answer.sheet = nrow(result.out$answer.sheet)
+nrow.answer.sheet = nrow(result.out$df.answer.wide)
 test_that(desc = 'Test of rte.build.rdn.test (size answer sheet)',{
   expect_equal(nrow.answer.sheet, n.test)
 } )
 
-nrow.df = nrow(result.out$df)
+nrow.df = nrow(result.out$df.answer.long)
 test_that(desc = 'Test of rte.build.rdn.test (size of df)',{
   expect_equal(nrow.df, n.test*n.question)
 } )

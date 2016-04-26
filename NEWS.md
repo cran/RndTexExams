@@ -1,12 +1,19 @@
-# Version 1.1.1 (2016-02-19)
+### Version 1.2 (2016-04-22)
+
+  - Now using tools::texi2pdf() instead of custom call to pdflatex
+  - More input checks
+  - Added code for grading tests
+  - Improved vignette text
+
+### Version 1.1.1 (2016-02-19)
 
   - Fixed function for latex compilation by checking latex flavor and type of OS
 
-# Version 1.1.0 (2016-02-18)
+### Version 1.1.0 (2016-02-18)
 
   - Redefined pdflatex command (excluding sintex)
   - Fixed bugs in vignette and examples
   - Improved text of vignette
   - Fixed function for latex compilation by checking latex flavor and type of OS
   
-# Version 1.0.0 - Initial version (2016-02-01)
+### Version 1.0.0 - Initial version (2016-02-01)

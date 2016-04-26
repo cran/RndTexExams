@@ -11,7 +11,7 @@
 #' @param n.test The number of random exams to be build (usually the number of
 #'   students in class)
 #' @param n.question The number of questions in each exam (If the LaTeX file has
-#'   N questions, the code will select n.question of these)
+#'   N questions, the code will randomly select n.question of these)
 #' @param latex.dir.out The name of the folder where the files from the latex
 #'   compilation should go (will create if not found)
 #' @param pdf.dir.out The name of the folder where the pdf files from the latex
@@ -23,16 +23,15 @@
 #' @param do.clean.up Should R clean up all extra files from the LaTeX
 #'   compilations and leave only the pdf? (select FALSE if you want see the log
 #'   files from latex)
-#' @return A list with the following items: \describe{ \item{df.out}{A dataframe
+#' @return A list with the following items: \describe{ \item{df.answer.wide}{A dataframe
 #'   with the tests, order of questions and correct answers}
-#'   \item{answer.sheet}{The answer sheet for each random test (a wide version
-#'   of table df.out)} }
+#'   \item{answer.matrix}{A matrix with the correct answers (rows = version, columns = questions)} }
 #' @examples
 #' # define some options
 #' latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 #' pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 #' f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-#' n.test <- 10               # Number of tests to build
+#' n.test <- 3               # Number of tests to build
 #' n.question <- 3            # Number of questions in each test
 #'
 #' # Get latex example from package
@@ -268,12 +267,18 @@ rte.build.rdn.test <- function(list.in,
 
   cat('\nrte: FINISHED - Check folder', pdf.dir.out, 'for pdf files')
 
-  answer.sheet <- data.table::dcast(data = data.table::data.table(df.out),
-                        formula = n.test  ~ n.question,
-                        fun.aggregate = function(x) return(x), value.var = 'correct.answer', fill = NA )
+  df.answer.wide <- data.table::dcast(data = data.table::data.table(df.out),
+                                 formula = n.test  ~ n.question,
+                                 fun.aggregate = function(x) return(x), value.var = 'correct.answer', fill = NA )
 
 
-  list.out <-list(answer.sheet = answer.sheet, df = df.out)
+  answer.matrix <- as.matrix(as.data.frame(df.answer.wide)[,c(1+seq(n.question))])
+
+  rownames(answer.matrix) <- paste('Version',seq(n.test))
+
+  list.out <-list(df.answer.wide = df.answer.wide,
+                  answer.matrix = answer.matrix,
+                  df.answer.long = df.out)
 
   return(list.out)
 

@@ -4,12 +4,14 @@
 \alias{rte.compile.latex}
 \title{Function to compile a LaTeX file}
 \usage{
-rte.compile.latex(f.in, pdf.dir.out = "PdfOut")
+rte.compile.latex(f.in, pdf.dir.out = "PdfOut", do.clean.up = T)
 }
 \arguments{
 \item{f.in}{The location and name of latex file}
 
 \item{pdf.dir.out}{The name of the folder for the output pdf}
+
+\item{do.clean.up}{Clean (delete) auxiliary latex files? (TRUE or NOT)}
 }
 \value{
 A flag, TRUE if the latex compilation was a sucess and FALSE if not

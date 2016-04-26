@@ -19,7 +19,7 @@ code will create files 'RdnTest_1.pdf', 'RdnTest_2.pdf', and so on)}
 students in class)}
 
 \item{n.question}{The number of questions in each exam (If the LaTeX file has
-N questions, the code will select n.question of these)}
+N questions, the code will randomly select n.question of these)}
 
 \item{latex.dir.out}{The name of the folder where the files from the latex
 compilation should go (will create if not found)}
@@ -38,10 +38,9 @@ compilations and leave only the pdf? (select FALSE if you want see the log
 files from latex)}
 }
 \value{
-A list with the following items: \describe{ \item{df.out}{A dataframe
+A list with the following items: \describe{ \item{df.answer.wide}{A dataframe
   with the tests, order of questions and correct answers}
-  \item{answer.sheet}{The answer sheet for each random test (a wide version
-  of table df.out)} }
+  \item{answer.matrix}{A matrix with the correct answers (rows = version, columns = questions)} }
 }
 \description{
 This function will take as input a list from rte.analize.tex.file and use it
@@ -53,7 +52,7 @@ how to use it.
 latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-n.test <- 10               # Number of tests to build
+n.test <- 3               # Number of tests to build
 n.question <- 3            # Number of questions in each test
 
 # Get latex example from package
