@@ -4,21 +4,19 @@
 \alias{rte.grade.exams}
 \title{Grade exams built using rte.grade.exams}
 \usage{
-rte.grade.exams(exam.names, official.names, exam.version, exam.answer.matrix,
+rte.grade.exams(exam.names, exam.version, exam.answer.matrix,
   list.build.rdn.exam, question.points = NULL)
 }
 \arguments{
 \item{exam.names}{A character vector with the names of the students, obtained from the test}
 
-\item{official.names}{A character array with the names of the students obtained from the university system (what really counts for registering marks)}
-
 \item{exam.version}{A numeric vector with the version of the exam for each student, obtained from the exam}
 
-\item{exam.answer.matrix}{A matrix with the answers of the students where the rows represent each studend and the columns are the answers to each question}
+\item{exam.answer.matrix}{A matrix with the answers of the students where the rows represent each student and the columns are the answers to each question}
 
 \item{list.build.rdn.exam}{A list with several information of the random exams (output from rte.build.rdn.text)}
 
-\item{question.points}{A numeric vector with the score for each question (if not available, will assume the naive value of 1/n.question)}
+\item{question.points}{A numeric vector with the score for each question (default = 1/n.question)}
 }
 \value{
 A list with the following items: \describe{
@@ -26,9 +24,7 @@ A list with the following items: \describe{
   \item{df.final.score}{A dataframe with the final results for each student} }
 }
 \description{
-This function will take as input a list from rte.analize.tex.file and use it
-to build pdf files of random exams. See the package vignette for details on
-how to use it.
+This function will take as input the information from the exam and grade it using the framework of \pkg{RndTexExams}
 }
 \examples{
 # define some options
@@ -59,10 +55,7 @@ list.build.rdn.exam <- rte.build.rdn.test(list.in = list.out,
 
 # Grade it!
 #' # create some (almost) random names
-my.names <- c('John', 'Max','Michael')
-
-# official names from the university system
-official.names <- c('John A.', 'Max B.','Michael C.')
+my.names <- c('John', 'Max','Marcelo')
 
 # version of the test for each student
 ver.test <- seq(1:length(my.names))
@@ -83,7 +76,6 @@ my.answers <- cbind(correct.answer.sheet[ver.test,1:q.to.cheat],
 
 # grade exams with rte.grade.exams
 list.grade <- rte.grade.exams(exam.names = my.names,
-                              official.names = official.names,
                               exam.version = ver.test,
                               exam.answer.matrix = my.answers,
                               list.build.rdn.exam = list.build.rdn.exam)

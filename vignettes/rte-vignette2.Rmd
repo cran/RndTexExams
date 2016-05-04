@@ -1,0 +1,64 @@
+---
+title: "Testing for visual cheating with RndTexExams"
+author: "Marcelo Perlin"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Testing for visual cheating with RndTexExams}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+## Testing for cheating in exams
+
+If you are still not convinced that students aren't cheating, you can use function `rte.test.cheating` to statisticaly test this hypothesis and detect suspicious pairs of students that may have copied their answers from each other. All of the tests performed by `rte.test.cheating` are based on package [CopyDetect](https://cran.r-project.org/package=CopyDetect). The statistical tests available in `CopyDetect` are:
+
+- Omega index (Wollack, 1996)
+- Generalized Binomial Test ([GBT], van der Linden & Sotaridona (2006)
+- K index (Holland, 1996)
+- K1 and K2 indices (Sotaridona & Meijer, 2002)
+- S1 and S2 indices (Sotaridona & Meijer, 2003) }
+
+The mathematical details regarding the tests can be found [here](http://apm.sagepub.com/content/37/1/93.extract)
+
+The function `rte.test.cheating` will test the hypothesis of cheating using all seven approaches and for all unique pairwise combination of the students. The output of the function presents all the results of the tests as a dataframe and all the suspicious pairs of students, if found any. Next I present an example with simulated data.
+
+
+```{r, eval=TRUE, fig.width= 5}
+library(RndTexExams, quietly = TRUE, warn.conflicts = TRUE)
+
+n.sim.questions <- 15
+
+first.names <- c('John', 'Marcelo','Ricardo', 'Tarcizio')
+last.names <- c('Smith', 'Johnson', 'P.')
+
+name.grid <- expand.grid(first.names,last.names)
+
+# Create names with all combinations of first and last name
+my.names <- paste(name.grid[,1], name.grid[,2])
+
+set.seed(15)
+
+# A simulated grade of students (TRUE = correct, FALSE = wrong)
+correction.mat <- matrix(sample(c(TRUE,FALSE),
+                                size = length(my.names)*n.sim.questions,
+                                replace = TRUE),nrow = length(my.names))
+
+# Simulate some cheating
+idx.cheater.1 <- 5 # std 5 and 10 will have similar correct answers
+idx.cheater.2 <- 10 
+proportion.to.cheat <- 0.5  # proportion of same correct answers
+q.to.cheat <- floor(proportion.to.cheat*n.sim.questions)
+correction.mat[idx.cheater.1, ] <-  c(rep(TRUE,q.to.cheat),
+                                      rep(FALSE,n.sim.questions-q.to.cheat))
+correction.mat[idx.cheater.2, ] <- correction.mat[idx.cheater.1, ]
+
+# bind names and correction matrix
+df.grade <- cbind(data.frame(exam.names = my.names),correction.mat)
+
+# test for cheating
+test.cheating.out <- rte.test.cheating(df.grade)
+
+```
+

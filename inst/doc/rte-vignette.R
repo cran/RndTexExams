@@ -1,5 +1,5 @@
 ## ----eval=T--------------------------------------------------------------
-library(RndTexExams)
+library(RndTexExams, quietly = TRUE)
 
 set.seed(10)
 
@@ -29,20 +29,14 @@ list.build.rdn.exam <- rte.build.rdn.test(list.in = list.in,
 ## ----eval=TRUE-----------------------------------------------------------
 print(list.build.rdn.exam$answer.matrix)
 
-#write.csv(x = list.build.rdn.exam$answer.df, file = 'Answer_Matrix_csv')
-
-
 ## ----eval=TRUE-----------------------------------------------------------
-#set.seed(11)
+set.seed(10)
 
 # create some (almost) random names
 my.names <- c('John', 'Max','Michael','Marcelo','Ricardo', 'Tarcizio')
 
-# official names from the university system
-official.names <- c('John A.', 'Max B.','Michael C.','Marcelo P.','Ricardo P.','Tarcizio P.')
-
-# version of the test for each student
-ver.test <- sample(seq(1:length(my.names)))
+# random version of the test for each student
+ver.test <- sample(n.test,size = length(my.names),replace = TRUE)
 
 # number of simulated questions (same as before)
 n.questions <- 4
@@ -59,8 +53,7 @@ my.answers <- cbind(correct.answer.sheet[ver.test,1:q.to.cheat],
                            ncol = n.questions-q.to.cheat ))
 
 # grade exams with rte.grade.exams 
-list.grade <- rte.grade.exams(exam.names = my.names,
-                              official.names = official.names,
+grade.l.out <- rte.grade.exams(exam.names = my.names,
                               exam.version = ver.test, 
                               exam.answer.matrix = my.answers,
                               list.build.rdn.exam = list.build.rdn.exam)
@@ -70,27 +63,15 @@ list.grade <- rte.grade.exams(exam.names = my.names,
 
 library(ggplot2)
 
-p <- ggplot(list.grade$df.final.score, aes(y = final.score, x = official.names))
-p <- p + geom_bar(stat = "identity")
+p <- ggplot(grade.l.out$df.final.score, aes(y = final.score, x = my.names))
+p <- p + geom_bar(stat = "identity") + labs(title = 'Final Score')
 p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 print(p)
 
-p <- ggplot(list.grade$df.grade, aes(y = n.question, x = official.names, fill = grade.logical))
-p <- p + geom_tile()
+p <- ggplot(grade.l.out$df.grade, aes(y = n.question, x = exam.names, fill = grade.logical))
+p <- p + geom_tile() + labs(title = 'Correct answer grade')
 p <- p + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 print(p)
-
-## ---- eval=FALSE---------------------------------------------------------
-#  library(googlesheets)
-#  
-#  gs_auth()   # will open a broswer for authentication
-#  my.gs <- gs_title(x = 'RndTexExam Example Form (respostas)') # or any title of spreadsheet
-#  
-#  df.exam.answers <- gs_read(ss = my.gs)
-#  
-#  # ...
-#  # rest of code for grading
-#  
 
 ## ----eval=FALSE----------------------------------------------------------
 #  setwd('Your path goes here')

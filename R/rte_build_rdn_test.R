@@ -16,6 +16,7 @@
 #'   compilation should go (will create if not found)
 #' @param pdf.dir.out The name of the folder where the pdf files from the latex
 #'   compilation should go (will create if not found)
+#' @param latex.compile.fct Option for defining function that calls pdflatex ('texi2pdf' (default) or 'custom').
 #' @param do.randomize.questions Do you want the order of the questions to be
 #'   random? (TRUE or FALSE)
 #' @param do.randomize.answers Do you want the order of the answers to be
@@ -48,10 +49,7 @@
 #'                                  n.test = n.test,
 #'                                  n.question = n.question,
 #'                                  latex.dir.out = latex.dir.out,
-#'                                  pdf.dir.out = pdf.dir.out,
-#'                                  do.randomize.questions=TRUE,
-#'                                  do.randomize.answers=TRUE,
-#'                                  do.clean.up = TRUE)
+#'                                  pdf.dir.out = pdf.dir.out)
 #'
 #' @export
 rte.build.rdn.test <- function(list.in,
@@ -60,6 +58,7 @@ rte.build.rdn.test <- function(list.in,
                                n.question,
                                latex.dir.out = 'latexOut',
                                pdf.dir.out = 'PdfOut',
+                               latex.compile.fct = 'texi2pdf',
                                do.randomize.questions=T,
                                do.randomize.answers=T,
                                do.clean.up = T){
@@ -83,6 +82,13 @@ rte.build.rdn.test <- function(list.in,
 
   cat('Done')
 
+  # error catching (input latex.compile.fct)
+
+  if (sum(latex.compile.fct == c('texi2pdf','custom'))==0){
+    stop('Input latex.compile.fct should either be "texi2pdf" or "custom" ')
+  }
+
+
   # END error checking
 
   df.questions <- list.in$df.questions
@@ -95,6 +101,7 @@ rte.build.rdn.test <- function(list.in,
 
   cat('\nrte: pdflatex flavor:', rte.check.latex.flavor())
   cat('\nrte: Type of OS:', rte.check.my.os())
+  cat('\nrte: Latex compile function:', latex.compile.fct)
 
 
   for (i.test in seq(1,n.test)){
@@ -241,7 +248,9 @@ rte.build.rdn.test <- function(list.in,
 
     stringi::stri_write_lines(my.tex.file,fname = f.temp.tex, encoding = 'UTF-8')
 
-    rte.compile.latex(f.temp.tex, pdf.dir.out)
+    rte.compile.latex(f.temp.tex,
+                      pdf.dir.out = pdf.dir.out,
+                      latex.compile.fct = latex.compile.fct)
 
 
     df.out <- rbind(df.out, data.frame(n.test = rep(i.test,n.question),

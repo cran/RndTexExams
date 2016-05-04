@@ -1,15 +1,12 @@
 #' Grade exams built using rte.grade.exams
 #'
-#' This function will take as input a list from rte.analize.tex.file and use it
-#' to build pdf files of random exams. See the package vignette for details on
-#' how to use it.
+#' This function will take as input the information from the exam and grade it using the framework of \pkg{RndTexExams}
 #'
 #' @param exam.names A character vector with the names of the students, obtained from the test
-#' @param official.names A character array with the names of the students obtained from the university system (what really counts for registering marks)
 #' @param exam.version A numeric vector with the version of the exam for each student, obtained from the exam
-#' @param exam.answer.matrix A matrix with the answers of the students where the rows represent each studend and the columns are the answers to each question
+#' @param exam.answer.matrix A matrix with the answers of the students where the rows represent each student and the columns are the answers to each question
 #' @param list.build.rdn.exam A list with several information of the random exams (output from rte.build.rdn.text)
-#' @param question.points A numeric vector with the score for each question (if not available, will assume the naive value of 1/n.question)
+#' @param question.points A numeric vector with the score for each question (default = 1/n.question)
 #'
 #' @return A list with the following items: \describe{
 #' \item{df.grade}{A dataframe with the partial resuts from grading}
@@ -43,10 +40,7 @@
 #'
 #' # Grade it!
 #' #' # create some (almost) random names
-#' my.names <- c('John', 'Max','Michael')
-#'
-#' # official names from the university system
-#' official.names <- c('John A.', 'Max B.','Michael C.')
+#' my.names <- c('John', 'Max','Marcelo')
 #'
 #' # version of the test for each student
 #' ver.test <- seq(1:length(my.names))
@@ -67,7 +61,6 @@
 #'
 #' # grade exams with rte.grade.exams
 #' list.grade <- rte.grade.exams(exam.names = my.names,
-#'                               official.names = official.names,
 #'                               exam.version = ver.test,
 #'                               exam.answer.matrix = my.answers,
 #'                               list.build.rdn.exam = list.build.rdn.exam)
@@ -75,7 +68,6 @@
 #' print(list.grade$df.final.score)
 #' @export
 rte.grade.exams <- function(exam.names,
-                            official.names,
                             exam.version,
                             exam.answer.matrix,
                             list.build.rdn.exam,
@@ -83,16 +75,12 @@ rte.grade.exams <- function(exam.names,
 
   # error checking
 
-  if (length(exam.names)!=length(official.names)){
-    stop('Length of inputs exam.names and official.names do not MATCH!')
+  if (length(exam.version)!=length(exam.names)){
+    stop('Length of inputs exam.version DO NOT match with the length of exam.names')
   }
 
-  if (length(exam.version)!=length(official.names)){
-    stop('Length of inputs exam.version DO NOT match with the length of official.names')
-  }
-
-  if (nrow(exam.answer.matrix)!=length(official.names)){
-    stop('The number of rows in exam.answer.matrix DO NOT match with the length of official.names')
+  if (nrow(exam.answer.matrix)!=length(exam.names)){
+    stop('The number of rows in exam.answer.matrix DO NOT match with the length of exam.names')
   }
 
   correct.answer.sheet <- list.build.rdn.exam$answer.matrix
@@ -153,16 +141,7 @@ rte.grade.exams <- function(exam.names,
 
     answers.now <- exam.answer.matrix[i.std, ]
 
-    # index to match student name in the exam with the official name
-
-    suppressWarnings(
-    idx <- stringdist::amatch(x = name.now,
-                              table = official.names,
-                              method = 'lcs',
-                              maxDist = 50,
-                              nomatch = 'NO MATCH FOR NAME')
-    )
-
+    # find correct answers by version
     correct.answer.now <- correct.answer.sheet[ver.now,]
 
     logical.correct <- (answers.now==correct.answer.now)
@@ -170,14 +149,12 @@ rte.grade.exams <- function(exam.names,
     names(logical.correct) <- paste0('Q.',seq(1:length(logical.correct)))
     names(logical.correct) <- NULL
 
-
     # build temp df for output
 
-    temp.df <- data.frame(exam.name = name.now,
-                          official.names = official.names[idx],
+    temp.df <- data.frame(exam.names = name.now,
                           exam.ver = ver.now,
                           n.question = seq(1:n.question),
-                          rnd.idx.question = rnd.idx.questions[idx.questions==ver.now],
+                          rnd.idx.questions = rnd.idx.questions[idx.questions==ver.now],
                           question.score = question.points,
                           grade.logical = logical.correct)
 
@@ -185,12 +162,19 @@ rte.grade.exams <- function(exam.names,
 
   }
 
-  df.final.score <- with(df.grade,aggregate(question.score*grade.logical,by = list(official.names), FUN=sum))
+  df.final.score <- with(df.grade,aggregate(question.score*grade.logical,by = list(exam.names), FUN=sum))
 
-  colnames(df.final.score) <- c('official.names','final.score')
+  colnames(df.final.score) <- c('exam.names','final.score')
 
-  list.out <- list(df.grade = df.grade, df.final.score = df.final.score)
+  df.correction.wide <- data.table::dcast(data = data.table::data.table(df.grade),
+                                          formula = exam.names ~ rnd.idx.questions,
+                                          fun.aggregate = function(x) return(x), value.var = 'grade.logical', fill = NA )
 
-  return(list.out)
+
+  grade.l.out <- list(df.grade = df.grade,
+                      df.final.score = df.final.score,
+                      df.correction.wide = df.correction.wide)
+
+  return(grade.l.out)
 
 }
