@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage{pifont}
-\usepackage[english,brazil]{babel}
+\usepackage[english]{babel}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \usepackage{totpages}
@@ -33,6 +33,7 @@
 
 \begin{examtop}
 
+% detais of the exam (you should probably edit this!)
 \begin{center}
     \textbf{\Large  Name of my University} \\
     \textbf{\Large  My Department} \vspace{0.5cm}  \\
@@ -57,7 +58,7 @@ Instructions for this test:
 
 \begin{itemize}
 
-	\item Make sure you finish before the end of time
+	\item Make sure you finish before the end of the exam time
 
 	\item There is only one correct answer in all multiple choice questions
 
@@ -71,12 +72,12 @@ Instructions for this test:
 \end{framed}
 
 \begin{framed}
-	Instructions on how to use MyRandomTest (DELETE THIS in FINAL VERSION)
+	Instructions on how to use RndTexExams (DELETE THIS IN THE FINAL VERSION)
 	\begin{itemize}
 
-		\item The switch statements for the text of the questions, including main text and answers are defined as @{Text for version 1}|{Text for version 2}@.  Fell free to define as many versions as needed.
+		\item The switch statements for the text of the questions, including main text and answers are defined as @{Text for version 1}|{Text for version 2}@. For each question, fell free to define as many versions as needed.
 
-		\item You can define the right answer in each version of the test by assigning the character [ver] in the right answer for version ver. See the rest of the file for examples.
+		\item You can define the right answer in each version of the test by assigning the character [!] or [ver] in the right answer for version ver. See the rest of the file for examples.
 
 
 	\end{itemize}
@@ -115,7 +116,7 @@ Instructions for this test:
 
 		\item R has a @{high}|{low}@ number of packages for empirical research in Finance
 
-		\item Microsoft word is @{better}|{worse}@ than latex for handling structured documents
+		\item Microsoft word is @{better}|{worse}@ than latex for creating structured documents
 	\end{enumerate}
 
 	Are correct:
@@ -139,13 +140,13 @@ Instructions for this test:
 
 	\choice{Choice 1 - Incorrect in all versions}
 
-	\choice{[1]Choice 2 - @{Correct in version 1}|{Incorrect in version 2}|{Incorrect in version 3}@}
+	\choice{[1] Choice 2 - @{Correct in version 1}|{Incorrect in version 2}|{Incorrect in version 3}@}
 
 	\choice{[3] Choice 3 - @{Incorrect in version 1}|{Incorrect in version 2}|{Correct in version 3}@}
 
 	\choice{Choice 4 - Incorrect in all versions}
 
-	\choice{[2]Choice 5 - @{Incorrect in version 1}|{Correct in version 2}|{Incorrect in version 3}@}
+	\choice{[2] Choice 5 - @{Incorrect in version 1}|{Correct in version 2}|{Incorrect in version 3}@}
 
 \end{question}
 
@@ -173,8 +174,8 @@ Instructions for this test:
 
 \end{question}
 
-\end{multiplechoice}
 
+\end{multiplechoice}
 
 
 \end{document}

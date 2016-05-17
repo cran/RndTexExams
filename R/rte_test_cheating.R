@@ -22,7 +22,7 @@
 #' and the rest of the columns are the correct (TRUE) and incorrect (FALSE) answers. Each column other
 #' than exam.names should be a question
 #' @param p.level Critial level of statistical testing
-#' @param print.suspects Print suspects on screen ? (TRUE or FALSE) (Default=TRUE)
+#' @param print.suspects Print testing information and suspects on screen ? (TRUE or FALSE) (Default=TRUE)
 #' @param do.cheat.plot Print plot of cheating tests? (TRUE of FALSE) (Default=TRUE)
 #' @param suspicion.threshold Proportion of failed cheating tests that justify suspition, between 0 and 1
 #'
@@ -35,10 +35,10 @@
 #'
 #' @examples
 #' # number of simulated questions in exam
-#' n.sim.questions <- 15
+#' n.sim.questions <- 10
 #'
 #' base.names <- c('John', 'Marcelo','Ricardo', 'Tarcizio')
-#' last.names <- c('Smith', 'Johnson','P.')
+#' last.names <- c('Smith', 'P.')
 #'
 #' name.grid <- expand.grid(base.names,last.names)
 #'
@@ -55,7 +55,7 @@
 #'
 #' idx.cheater.1 <- 5 # std 5 and 6 have simillar correct answers
 #' idx.cheater.2 <- 6
-#' proportion.to.cheat <- 0.6  # proportion of same correct answers
+#' proportion.to.cheat <- 0.5  # proportion of same correct answers
 #' q.to.cheat <- floor(proportion.to.cheat*n.sim.questions)
 #' correction.mat[idx.cheater.1, ] <-  c(rep(TRUE,q.to.cheat),
 #'                                       rep(FALSE,n.sim.questions-q.to.cheat))
@@ -129,9 +129,11 @@ rte.test.cheating <- function(df.grade,
 
     run.test <- any(pair.now[1]==pair.now[2], pair.now[1]>pair.now[2])
 
+    if (print.suspects){
     cat(paste0('\n',
                '[',i.pair,'|',nrow(my.grid),'] - ',
                my.grid$exam.names.Std1[i.pair],' | ',my.grid$exam.names.Std2[i.pair]))
+    }
 
 
     if (run.test){
@@ -149,7 +151,9 @@ rte.test.cheating <- function(df.grade,
 
       df.pvalue <- rbind(df.pvalue, temp.df)
 
-      cat(' - No need for this run (repeated case). Skipping..')
+      if (print.suspects){
+        cat(' - No need for this run (repeated case). Skipping..')
+      }
 
       next()
 
@@ -194,10 +198,12 @@ rte.test.cheating <- function(df.grade,
       suspicion.flag <- '  --> Cheater?'
     }
 
+    if (print.suspects){
     cat(paste0(' | Proportion of failed tests cheating ',
                format(my.failed.prop*100,digits = 2),
                '% ',
                suspicion.flag))
+    }
 
   }
 

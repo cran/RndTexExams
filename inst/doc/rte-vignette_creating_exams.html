@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2016-05-04" />
+<meta name="date" content="2016-05-16" />
 
 <title>Creating and grading randomized exams with RndTexExams</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Creating and grading randomized exams with RndTexExams</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2016-05-04</em></h4>
+<h4 class="date"><em>2016-05-16</em></h4>
 
 
 
@@ -86,6 +86,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2>Before you start</h2>
 <p>In order to use RndTexExams you will need to install <a href="https://www.latex-project.org/">latex</a>. You have two main choices, <a href="http://miktex.org/">miktex</a> and <a href="https://www.tug.org/texlive/">texlive</a>. I also advice to use a nice IDE such as <a href="http://www.texstudio.org/">texstudio</a>.</p>
 <p>Miktex and texlive are good choices and should work well with RndTexExams. My advice for those first starting out in latex is to download the example file of the package from <a href="https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a#file-myrandomtest-tex">here</a> and compile it using your flavor of latex.</p>
+<p>For Linux users it might be necessary to install the <code>latex</code> package <code>examdesign</code> and the system function <code>texi2dvi</code>. The following terminal code will make sure all <code>latex</code> requirements are installed and ready for use:</p>
+<pre><code>sudo apt-get install texlive-base texlive-latex-extra texinfo</code></pre>
 </div>
 <div id="how-to-write-questions-with-examdesign-and-rndtexexams" class="section level2">
 <h2>How to write questions with examdesign and RndTexExams</h2>

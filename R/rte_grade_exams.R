@@ -16,8 +16,8 @@
 #' latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 #' pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 #' f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-#' n.test <- 3                # Number of tests to build
-#' n.question <- 4            # Number of questions in each test
+#' n.test <- 2                # Number of tests to build
+#' n.question <- 2            # Number of questions in each test
 #'
 #' # Get latex example from package
 #' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
@@ -43,21 +43,18 @@
 #' my.names <- c('John', 'Max','Marcelo')
 #'
 #' # version of the test for each student
-#' ver.test <- seq(1:length(my.names))
-#'
-#' # number of simulated questions (same as before)
-#' n.questions <- n.question
+#' ver.test <- sample(seq(n.test),size = length(my.names),replace=TRUE)
 #'
 #' # Get the correct answer sheet from previous code
 #' correct.answer.sheet <- list.build.rdn.exam$answer.matrix
 #'
 #' # create simulated answers from students (cheat a little bit!)
-#' q.to.cheat <- 2  # get at least 2 questions right!
+#' q.to.cheat <- 1  # get at least 1 question right!
 #' my.answers <- cbind(correct.answer.sheet[ver.test,1:q.to.cheat],
 #'                     matrix(sample(letters[1:5],
 #'                                   replace = TRUE,
-#'                                   size = length(my.names)*(n.questions-q.to.cheat)),
-#'                            ncol = n.questions-q.to.cheat ))
+#'                                   size = length(my.names)*(n.question-q.to.cheat)),
+#'                            ncol = n.question-q.to.cheat ))
 #'
 #' # grade exams with rte.grade.exams
 #' list.grade <- rte.grade.exams(exam.names = my.names,

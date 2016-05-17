@@ -14,7 +14,7 @@ than exam.names should be a question}
 
 \item{p.level}{Critial level of statistical testing}
 
-\item{print.suspects}{Print suspects on screen ? (TRUE or FALSE) (Default=TRUE)}
+\item{print.suspects}{Print testing information and suspects on screen ? (TRUE or FALSE) (Default=TRUE)}
 
 \item{do.cheat.plot}{Print plot of cheating tests? (TRUE of FALSE) (Default=TRUE)}
 
@@ -47,10 +47,10 @@ The article can be found \href{http://apm.sagepub.com/content/37/1/93.extract}{h
 }
 \examples{
 # number of simulated questions in exam
-n.sim.questions <- 15
+n.sim.questions <- 10
 
 base.names <- c('John', 'Marcelo','Ricardo', 'Tarcizio')
-last.names <- c('Smith', 'Johnson','P.')
+last.names <- c('Smith', 'P.')
 
 name.grid <- expand.grid(base.names,last.names)
 
@@ -67,7 +67,7 @@ correction.mat <- matrix(sample(c(TRUE,FALSE),
 
 idx.cheater.1 <- 5 # std 5 and 6 have simillar correct answers
 idx.cheater.2 <- 6
-proportion.to.cheat <- 0.6  # proportion of same correct answers
+proportion.to.cheat <- 0.5  # proportion of same correct answers
 q.to.cheat <- floor(proportion.to.cheat*n.sim.questions)
 correction.mat[idx.cheater.1, ] <-  c(rep(TRUE,q.to.cheat),
                                       rep(FALSE,n.sim.questions-q.to.cheat))

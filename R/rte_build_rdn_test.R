@@ -32,8 +32,8 @@
 #' latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 #' pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 #' f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-#' n.test <- 3               # Number of tests to build
-#' n.question <- 3            # Number of questions in each test
+#' n.test <- 2                # Number of tests to build
+#' n.question <- 2            # Number of questions in each test
 #'
 #' # Get latex example from package
 #' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")

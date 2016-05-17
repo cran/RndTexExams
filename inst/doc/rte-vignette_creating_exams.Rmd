@@ -25,6 +25,12 @@ In order to use RndTexExams you will need to install [latex](https://www.latex-p
 
 Miktex and texlive are good choices and should work well with RndTexExams. My advice for those first starting out in latex is to download the example file of the package from [here](https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a#file-myrandomtest-tex) and compile it using your flavor of latex.
 
+For Linux users it might be necessary to install the `latex` package `examdesign` and the system function `texi2dvi`. The following terminal code will make sure all `latex` requirements are installed and ready for use:
+
+```
+sudo apt-get install texlive-base texlive-latex-extra texinfo
+```
+
 ## How to write questions with examdesign and RndTexExams
 
 A standard multiple choice exam is compose of several questions that have a main text and a set of alternative answers to choose from. A simple example is:

@@ -1,3 +1,9 @@
+### Version 1.3.1 (2016-05-16)
+
+  - Added choice for omittion of cat() output in rte.test.cheating
+  - Added linux texlive requirements in vignette
+  - Removed texlive-lang-portuguese dependency in example latex file
+
 ### Version 1.3 (2016-05-03)
 
   - Now using either texi2pdf or custom call to pdflatex (custom call is slightly faster, somehow)
