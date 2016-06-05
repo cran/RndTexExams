@@ -12,7 +12,7 @@ vignette: >
 
 ## Testing for cheating in exams
 
-If you are still not convinced that students aren't cheating, you can use function `rte.test.cheating` to statisticaly test this hypothesis and detect suspicious pairs of students that may have copied their answers from each other. All of the tests performed by `rte.test.cheating` are based on package [CopyDetect](https://cran.r-project.org/package=CopyDetect). The statistical tests available in `CopyDetect` are:
+If you are still not convinced that students aren't cheating, you can use function `rte.test.cheating` to statistically test this hypothesis and detect suspicious pairs of students that may have copied their answers from each other. All of the tests performed by `rte.test.cheating` are based on package [CopyDetect](https://cran.r-project.org/package=CopyDetect). The statistical tests available in `CopyDetect` are:
 
 - Omega index (Wollack, 1996)
 - Generalized Binomial Test ([GBT], van der Linden & Sotaridona (2006)

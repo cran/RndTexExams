@@ -16,14 +16,14 @@
 #' latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 #' pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 #' f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-#' n.test <- 2                # Number of tests to build
+#' n.test <- 1                # Number of tests to build
 #' n.question <- 2            # Number of questions in each test
 #'
 #' # Get latex example from package
-#' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+#' f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 #'
 #' # Break latex file into a R list
-#' list.out <- rte.analize.tex.file(f.in,
+#' list.out <- rte.analyze.tex.file(f.in,
 #'                                  latex.dir.out = latex.dir.out,
 #'                                  pdf.dir.out = pdf.dir.out)
 #'

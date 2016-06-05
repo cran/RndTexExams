@@ -1,0 +1,190 @@
+\documentclass[10pt]{examdesign}
+
+% loads all necessary packages (feel free to customize for your needs)
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{pifont}
+\usepackage[english]{babel}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{totpages}
+\usepackage[margin=0.9in]{geometry}
+\renewcommand{\headrulewidth}{0.0pt}
+\usepackage{framed}
+
+\SectionFont{\large\sffamily}
+\Fullpages
+\ContinuousNumbering
+\DefineAnswerWrapper{}{}
+\NumberOfVersions{1}
+
+%\ShortKey		% shows a short key answer sheet
+\NoKey			% Print key ?
+
+\NoRearrange 	% Random arrange with latex? (leave it UNCOMMENTED, R will do all of the dirty work)
+
+\newcommand{\myversion}{} % this line is very important as it locates and allows the printed test to show the number of  the test (DONT DELETE IT)
+
+% You probably want to change the next lines
+
+\newcommand{\UniName}{Name of my University} 
+\newcommand{\DeptName}{My Department} 
+\newcommand{\ClassName}{My Class Name} 
+\newcommand{\MyName}{Author: My name}
+\newcommand{\ExamName}{Exam Name: Version \myversion}
+\newcommand{\TermName}{Current Term}
+
+\rfoot{Random test \# \myversion}
+
+\begin{document}
+
+\begin{examtop}
+
+% detais of the exam (you should probably edit this!)
+\begin{center}
+    \textbf{\Large \UniName} \\
+    \textbf{\Large \DeptName} \vspace{0.5cm}  \\
+    \textbf{\Large \ClassName} \\
+    \textbf{\Large \MyName} \\
+    \textbf{\Large \ExamName } \\
+    \textbf{\Large \TermName}
+ \end{center}
+
+\vspace{1cm}
+Name: \rule{4in}{.4pt}  \quad  \noindent Card:\enspace\hrulefill
+
+%\rule[1ex]{\textwidth}{2pt}
+
+\vspace{1cm}
+
+\small
+
+\begin{framed}
+
+Instructions for this test:
+
+\begin{itemize}
+
+	\item Make sure you finish before the end of the exam time
+
+	\item There is only one correct answer in all multiple choice questions
+
+	\item Don't cheat!
+
+\end{itemize}
+
+\vspace{0.5cm}
+
+{\large \emph{Good Luck!}}
+\end{framed}
+
+\begin{framed}
+	Instructions on how to use RndTexExams (DELETE THIS IN THE FINAL VERSION)
+	\begin{itemize}
+
+		\item The switch statements for the text of the questions, including main text and answers are defined as @{Text for version 1}|{Text for version 2}@. For each question, fell free to define as many versions as needed.
+
+		\item You can define the right answer in each version of the test by assigning the character [!] or [ver] in the right answer for version ver. See the rest of the file for examples.
+
+
+	\end{itemize}
+
+\end{framed}
+
+\end{examtop}
+
+
+\vspace{1cm}
+
+\begin{multiplechoice}[resetcounter=no,  examcolumns=1]
+
+\begin{question}
+
+	Which one is the correct answer in the next five alternatives?
+
+	\choice{Choice 1}
+
+	\choice{Choice 2}
+
+	\choice{Choice 3}
+
+	\choice{Choice 4}
+
+	\choice[!]{Choice 5 - CORRECT}
+
+\end{question}
+
+\begin{question}
+
+	Consider the following statements:
+
+	\begin{enumerate}[I]
+		\item The color of the sky is generally @{blue}|{red}@
+
+		\item R has a @{high}|{low}@ number of packages for empirical research in Finance
+
+		\item Microsoft word is @{better}|{worse}@ than latex for creating structured documents
+	\end{enumerate}
+
+	Are correct:
+
+	\choice{[1] I and II}
+
+	\choice{II and III}
+
+	\choice{I, II and III}
+
+	\choice{[2] Only III}
+
+	\choice{Only I}
+
+\end{question}
+
+
+\begin{question}
+
+	Which of the next answers do you think is the correct one? (there are three versions of this question. This is version @{1}|{2}|{3}@)
+
+	\choice{Choice 1 - Incorrect in all versions}
+
+	\choice{[1] Choice 2 - @{Correct in version 1}|{Incorrect in version 2}|{Incorrect in version 3}@}
+
+	\choice{[3] Choice 3 - @{Incorrect in version 1}|{Incorrect in version 2}|{Correct in version 3}@}
+
+	\choice{Choice 4 - Incorrect in all versions}
+
+	\choice{[2] Choice 5 - @{Incorrect in version 1}|{Correct in version 2}|{Incorrect in version 3}@}
+
+\end{question}
+
+
+\begin{question}
+
+	Consider the following statements:
+
+	\begin{enumerate}[I]
+		\item Latex is @{good}|{bad}@ for structured documents
+
+		\item Working with R and latex is a @{good}|{bad}@ choice for writing up and marking tests
+
+		\item We @{love}|{hate}@ R
+
+	\end{enumerate}
+
+	Which statements are true?
+
+	\choice{I e II}
+	\choice{[1] I, II e III}
+	\choice{Only III}
+	\choice{I e III}
+	\choice{[2] None of the other options}
+
+\end{question}
+
+
+\end{multiplechoice}
+
+
+\end{document}

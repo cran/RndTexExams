@@ -1,4 +1,4 @@
-\documentclass[10pt]{examdesign}
+\documentclass[10pt, answers]{exam}
 
 % loads all necessary packages (feel free to customize for your needs)
 
@@ -7,40 +7,38 @@
 \usepackage[utf8]{inputenc}
 \usepackage{pifont}
 \usepackage[english]{babel}
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\usepackage{totpages}
-\usepackage[margin=0.9in]{geometry}
-\renewcommand{\headrulewidth}{0.0pt}
-\usepackage{framed}
-
-\SectionFont{\large\sffamily}
-\Fullpages
-\ContinuousNumbering
-\DefineAnswerWrapper{}{}
-\NumberOfVersions{1}
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\usepackage{totpages}
+\usepackage[margin=0.8in]{geometry}
+%\renewcommand{\headrulewidth}{0.0pt}
+%\usepackage{framed}
 
 %\ShortKey		% shows a short key answer sheet
-\NoKey			% Print key ?
 
-\NoRearrange 	% Random arrange with latex? (leave it UNCOMMENTED, R will do all of the dirty work)
 
 \newcommand{\myversion}{} % this line is very important as it locates and allows the printed test to show the number of  the test (DONT DELETE IT)
+
+% You probably want to change the next lines
+
+\newcommand{\UniName}{Name of my University} 
+\newcommand{\DeptName}{My Department} 
+\newcommand{\ClassName}{My Class Name} 
+\newcommand{\MyName}{Author: My name}
+\newcommand{\ExamName}{Exam Name: Version \myversion}
+\newcommand{\TermName}{Current Term}
 
 \rfoot{Random test \# \myversion}
 
 \begin{document}
 
-\begin{examtop}
-
-% detais of the exam (you should probably edit this!)
 \begin{center}
-    \textbf{\Large  Name of my University} \\
-    \textbf{\Large  My Department} \vspace{0.5cm}  \\
-    \textbf{\Large  Name of Class} \\
-	\textbf{\Large  Author: My name} \\
-    \textbf{\Large Exam Name: Version \myversion } \\
-    \textbf{\Large Current Term}
+    \textbf{\Large \UniName} \\
+    \textbf{\Large \DeptName} \vspace{0.5cm}  \\
+    \textbf{\Large \ClassName} \\
+	\textbf{\Large \MyName} \\
+    \textbf{\Large \ExamName } \\
+    \textbf{\Large \TermName}
  \end{center}
 
 \vspace{1cm}
@@ -84,98 +82,80 @@ Instructions for this test:
 
 \end{framed}
 
-\end{examtop}
-
 
 \vspace{1cm}
 
-\begin{multiplechoice}[resetcounter=no,  examcolumns=1]
-
-\begin{question}
+\begin{questions}
+	
+\question 
 
 	Which one is the correct answer in the next five alternatives?
-
-	\choice{Choice 1}
-
-	\choice{Choice 2}
-
-	\choice{Choice 3}
-
-	\choice{Choice 4}
-
-	\choice[!]{Choice 5 - CORRECT}
-
-\end{question}
-
-\begin{question}
-
+	
+	\begin{choices}
+	\choice Choice 1
+	\choice Choice 2
+	\choice Choice 3
+	\choice Choice 4
+	\CorrectChoice Choice 5 - CORRECT
+	\end{choices}
+		
+	
+\question 
+	
 	Consider the following statements:
-
-	\begin{enumerate}[I]
-		\item The color of the sky is generally @{blue}|{red}@
-
-		\item R has a @{high}|{low}@ number of packages for empirical research in Finance
-
+	
+	\begin{enumerate}%[I]
+		\item The color of the sky is generally @{blue}|{red}@		
+		\item R has a @{high}|{low}@ number of packages for empirical research in Finance		
 		\item Microsoft word is @{better}|{worse}@ than latex for creating structured documents
 	\end{enumerate}
-
+	
 	Are correct:
+	
+	\begin{choices}	
+	\choice [1] 1 and 2
+	\choice 2 and 3
+	\choice 1, 2 and 3
+	\choice [2] Only 3
+	\choice Only 1 
+	\end{choices}	
 
-	\choice{[1] I and II}
-
-	\choice{II and III}
-
-	\choice{I, II and III}
-
-	\choice{[2] Only III}
-
-	\choice{Only I}
-
-\end{question}
-
-
-\begin{question}
+\question 
 
 	Which of the next answers do you think is the correct one? (there are three versions of this question. This is version @{1}|{2}|{3}@)
-
-	\choice{Choice 1 - Incorrect in all versions}
-
-	\choice{[1] Choice 2 - @{Correct in version 1}|{Incorrect in version 2}|{Incorrect in version 3}@}
-
-	\choice{[3] Choice 3 - @{Incorrect in version 1}|{Incorrect in version 2}|{Correct in version 3}@}
-
-	\choice{Choice 4 - Incorrect in all versions}
-
-	\choice{[2] Choice 5 - @{Incorrect in version 1}|{Correct in version 2}|{Incorrect in version 3}@}
-
-\end{question}
+	
+	\begin{choices}	
+	\choice Choice 1 - Incorrect in all versions
+	\choice [1] Choice 2 - @{Correct in version 1}|{Incorrect in version 2}|{Incorrect in version 3}@ 
+	\choice [3] Choice 3 - @{Incorrect in version 1}|{Incorrect in version 2}|{Correct in version 3}@
+	\choice Choice 4 - Incorrect in all versions
+	\choice [2] Choice 5 - @{Incorrect in version 1}|{Correct in version 2}|{Incorrect in version 3}@
+	\end{choices}	
 
 
-\begin{question}
+\question 
 
 	Consider the following statements:
-
-	\begin{enumerate}[I]
+	
+	\begin{enumerate}%[I]
 		\item Latex is @{good}|{bad}@ for structured documents
-
+		
 		\item Working with R and latex is a @{good}|{bad}@ choice for writing up and marking tests
-
+		
 		\item We @{love}|{hate}@ R
-
+		
 	\end{enumerate}
-
+	
 	Which statements are true?
 
-	\choice{I e II}
-	\choice{[1] I, II e III}
-	\choice{Only III}
-	\choice{I e III}
-	\choice{[2] None of the other options}
-
-\end{question}
-
-
-\end{multiplechoice}
-
+	\begin{choices}
+	\choice 1 e 2
+	\choice [1] 1, 2 e 3
+	\choice Only 3
+	\choice 1 e 3
+	\choice [2] None of the other options
+	\end{choices}
+	
+\end{questions}
 
 \end{document}

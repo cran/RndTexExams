@@ -11,7 +11,7 @@ rte.build.rdn.test(list.in, f.out, n.test, n.question,
 }
 \arguments{
 \item{list.in}{A list with all the information of the LaTeX file. Usually the
-output from funtion rte.analize.tex.file()}
+output from funtion rte.analyze.tex.file()}
 
 \item{f.out}{The name for the pdf files (e.g. using f.out <- 'RdnTest_', the
 code will create files 'RdnTest_1.pdf', 'RdnTest_2.pdf', and so on)}
@@ -46,7 +46,7 @@ A list with the following items: \describe{ \item{df.answer.wide}{A dataframe
   \item{answer.matrix}{A matrix with the correct answers (rows = version, columns = questions)} }
 }
 \description{
-This function will take as input a list from rte.analize.tex.file and use it
+This function will take as input a list from rte.analyze.tex.file and use it
 to build pdf files of random exams. See the package vignette for details on
 how to use it.
 }
@@ -55,14 +55,14 @@ how to use it.
 latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-n.test <- 2                # Number of tests to build
+n.test <- 1                # Number of tests to build
 n.question <- 2            # Number of questions in each test
 
 # Get latex example from package
-f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 
 # Break latex file into a R list
-list.out <- rte.analize.tex.file(f.in,
+list.out <- rte.analyze.tex.file(f.in,
                                  latex.dir.out = latex.dir.out,
                                  pdf.dir.out = pdf.dir.out)
 

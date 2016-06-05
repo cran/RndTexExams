@@ -63,19 +63,17 @@ rte.check.my.os <-function(){
 #' @param latex.compile.fct Option for function compiling pdf ('texi2pdf' or 'custom')
 #' @return A flag, TRUE if the latex compilation was a sucess and FALSE if not
 #' @examples
-#' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+#' f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 #' pdf.dir.out <- 'PdfOut'
 #'
 #' rte.compile.latex(f.in = f.in,
-#'                  pdf.dir.out =  pdf.dir.out)
+#'                  pdf.dir.out =  pdf.dir.out,latex.compile.fct = 'custom')
 #'
 #' @export
 rte.compile.latex <- function(f.in,
                               pdf.dir.out = 'PdfOut',
                               do.clean.up = T,
                               latex.compile.fct = 'texi2pdf'){
-
-  #require(tools)
 
   my.os <- rte.check.my.os()
 
@@ -152,4 +150,82 @@ rte.compile.latex <- function(f.in,
   }
 
 
+}
+
+#' Function to get number of cases (textual switches) based on question text
+#'
+#' @param str.in The full text of the question
+#'
+#' @return n.cases Number of cases (textual switches in string)
+#'
+#' @examples
+#'
+#' my.question <- 'My questions is ... @{ver1}|{ver2}@' ## two cases
+#'
+#' n.cases <- rte.get.n.cases(my.question)
+#'
+#' @export
+rte.get.n.cases <- function(str.in){
+  my.matches <- stringr::str_extract_all(str.in ,pattern = '@(.*?)@')[[1]]
+
+  out.split <- lapply(my.matches, FUN = stringr::str_split, pattern=stringr::fixed('|'))
+  n.cases <- unlist(lapply(out.split,FUN = function(x) length(x[[1]]) ))
+
+  n.cases <- n.cases[1]
+  if (is.null(n.cases)){
+    return(1)
+  } else {
+    return(n.cases)
+  }
+}
+
+#' Function that returns parameters of latex classes (internal use)
+#'
+#' This function outputs the main elements of each latex class such as question/choices identifiers and environmental switches.
+#'
+#' @param exam.class The class of the exam (exam, examdesign)
+#'
+#' @return A list with parameters of the class
+#'
+#' @export
+#'
+#' @examples
+#' l.out <- rte.get.classes.def(exam.class = 'exam')
+#' print(l.out)
+rte.get.classes.def <- function(exam.class){
+
+  l.out <- list()
+  if (exam.class =='examdesign'){
+    l.out$str.pattern.correct <- '\\choice[!]'
+    l.out$str.pattern.choice <- '\\choice'
+
+    l.out$str.pattern.beg.mchoice <- '\\begin{multiplechoice}'
+    l.out$str.pattern.end.mchoice <- '\\end{multiplechoice}'
+
+    l.out$str.pattern.beg.question <- '\\begin{question}'
+    l.out$str.pattern.end.question <- '\\end{question}'
+
+    l.out$str.pattern.identifier.mchoice <- '\\choice{'
+
+
+
+  }
+
+  if (exam.class =='exam'){
+    l.out$str.pattern.correct <- '\\CorrectChoice'
+    l.out$str.pattern.choice <- '\\choice'
+
+    l.out$str.pattern.end.mchoice <- '\\end{questions}'
+    l.out$str.pattern.end.question <- ' \\end{choices}'
+    l.out$str.pattern.start.question <- '\\question'
+
+    l.out$str.pattern.start.env <- '\\begin{questions}'
+    l.out$str.pattern.end.env <- '\\end{questions}'
+
+    l.out$str.pattern.identifier.mchoice <- '\\begin{choices}'
+    l.out$str.pattern.identifier.oneparchoice <- '\\begin{oneparchoices}'
+
+  }
+
+  return(l.out)
 }

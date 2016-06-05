@@ -24,11 +24,11 @@ This function will first check for the flavor of latex, type of OS and then use 
 command for pdflatex compilation
 }
 \examples{
-f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 pdf.dir.out <- 'PdfOut'
 
 rte.compile.latex(f.in = f.in,
-                 pdf.dir.out =  pdf.dir.out)
+                 pdf.dir.out =  pdf.dir.out,latex.compile.fct = 'custom')
 
 }
 

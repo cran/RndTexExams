@@ -13,9 +13,9 @@ vignette: >
 
 The package RndTexExams creates exams with randomized content using R and latex. The R code will take as input a latex file and  randomly define, for all of the multiple choice questions, the order of the questions and the order of the answers. The user can also change the content of the questions in each version.
 
-The main target audience of this code is composed of examiners that are considering minimizing cheating in their exams. Based on this package and a database of questions, one can build an unique test and answer sheet for each student in the class, therefore making it nearly impossible to cheat by looking around or sharing the answer sheet. The use of the package with a cloud based spreadsheet tool also makes it possible to grade the exams digitally, without any manual intervention. This is a great feature that minimizes grading work in large classes. If you are still not convinced that the student might be cheating, you can statistically test this hipothesis using `RndTexExams` (see the other vignette).
+The main target audience of this code is composed of examiners that are considering minimizing cheating in their exams. Based on this package and a database of questions, one can build an unique test and answer sheet for each student in the class, therefore making it nearly impossible to cheat by looking around or sharing the answer sheet. The use of the package with a cloud based spreadsheet tool also makes it possible to grade the exams digitally, without any manual intervention. This is a great feature that minimizes grading work in large classes. If you are still not convinced that the student might be cheating, you can statistically test this hypothesis using `RndTexExams` (see the other vignette).
 
-The code of `RndTexExams` is built around the stable framework of [examdesign](https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign). Users that are not familiar with [LaTeX](https://www.latex-project.org/) or [examdesign](https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign), I strongly advice to read both manuals before using RndTexExams.
+The code of `RndTexExams` is built around the stable framework of [examdesign](https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign) and [exam](https://www.ctan.org/tex-archive/macros/latex/contrib/exam?lang=en). Users that are not familiar with [LaTeX](https://www.latex-project.org/) and its exam classes, I strongly advice to read the  manuals before using RndTexExams. Users familiar with both can start using `RndTexExams` with minor additions to the Latex file.
 
 # How to use RndTexExams
 
@@ -25,7 +25,7 @@ In order to use RndTexExams you will need to install [latex](https://www.latex-p
 
 Miktex and texlive are good choices and should work well with RndTexExams. My advice for those first starting out in latex is to download the example file of the package from [here](https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a#file-myrandomtest-tex) and compile it using your flavor of latex.
 
-For Linux users it might be necessary to install the `latex` package `examdesign` and the system function `texi2dvi`. The following terminal code will make sure all `latex` requirements are installed and ready for use:
+For Linux users it might be necessary to install the `latex` packages `examdesign`  and `exam` and the system function `texi2dvi`. The following terminal code will make sure all `latex` requirements are installed and ready for use:
 
 ```
 sudo apt-get install texlive-base texlive-latex-extra texinfo
@@ -51,6 +51,7 @@ A standard multiple choice exam is compose of several questions that have a main
 
 \ 
 
+For the rest of this tutorial we will use the [examdesign](https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign) template as it is well structured and self contained class for exam. The package `RndTexExams` also works for the [exam](https://www.ctan.org/tex-archive/macros/latex/contrib/exam?lang=en) class.
 In [examdesign](https://www.ctan.org/tex-archive/macros/latex/contrib/examdesign), the structure of a multiple choice question is defined using latex commands. The start of the multiple answer section is encapsulated by commands `\begin{multiplechoice}` and `\end{multiplechoice}`. Within this environment, all questions begin with `\begin{question}` and end with `\end{question}`. The multiple answers of the questions are marked as `\choice{}`. 
 
 Next I show the latex code that results in the previous example:
@@ -80,13 +81,13 @@ Next I show the latex code that results in the previous example:
 
 Notice from this simple example that each question has a main text and choices. The right answer of the question is marked with the symbol `[!]` as  in `\choice[!]{text of answer here}`. The right answer for each question can be later used to build a version of the test with the correct answers for all questions. 
 
-The package RndTexExams will read the latex file, search for all ocurrences of a multiple choice question then randomly rearrange the order of questions and alternatives, building a new latex file for each of the version of the exam. Therefore, each version of the test will have a different answer sheet. The latex files are later compiled from R, resulting in a set of pdf files that are ready for printing. 
+The package RndTexExams will read the latex file, search for all occurrences of a multiple choice question then randomly rearrange the order of questions and alternatives, building a new latex file for each of the version of the exam. Therefore, each version of the test will have a different answer sheet. The latex files are later compiled from R, resulting in a set of pdf files that are ready for printing. 
 
 ### Changing the textual content of the exam
 
 The package RndTexExams can use textual switches with specific symbols in order to define parts of the questions that can change in between versions. This is an optional feature for those examiners that wish to create different versions of the same questions.
 
-Any change in the text, whether it is in the main text of the question or text of the answers, is marked with symbol ` @{text in ver 1}|{text in ver 2}|{text in ver 3}@`. Making it clear, each version of the test will show the text according to its position. So, in version one it will show the text `text in ver 1`, in version two it will show the text `text in ver 2` and so on. The version of the content changes every time that R and LaTeX compiles a new test.
+Any change in the text, whether it is in the main text of the question or text of the answers, is marked with symbol ` @{text in ver 1}|{text in ver 2}|{text in ver 3}@`. Making it clear, each version of the test will show the text according to its position. So, in version one it will show the text `text in ver 1`, in version two it will show the text `text in ver 2` and so on. The version of the content changes every time that R and Latex compiles a new test.
 
 Since we are changing the text of the questions and answers, it is also necessary to change the correct answers in each version. To do this, simply add the symbol `[x]` in the text of the answers, where `x` is the version in which the alternative is correct.
 
@@ -112,9 +113,9 @@ As an example, we can make different versions of the previous example question b
 
 ```
 
-And thats it! The R code in RndTexExam will look for these simbolic expressions and randomly choose one of them for the final version of each exam. 
+And that's it! The R code in RndTexExam will look for these symbolic expressions and randomly choose one of them for the final version of each exam. 
 
-Once you have your questions with the proper syntax for using with RndTexExams, all you need to do is to pass the tex file to functions `rte.analize.tex.file` and later to `rte.build.rdn.test`. Next, I present the use of RndTexExam with an example latex file from the package.
+Once you have your questions with the proper syntax for using with RndTexExams, all you need to do is to pass the tex file to functions `rte.analyze.tex.file` and later to `rte.build.rdn.test`. Next, I present the use of RndTexExam with an example latex file from the package.
 
 ```{r eval=T}
 library(RndTexExams, quietly = TRUE)
@@ -122,16 +123,16 @@ library(RndTexExams, quietly = TRUE)
 set.seed(10)
 
 # Get latex file from package
-f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 
 # Breakdown latex file into a a list 
-list.out <- rte.analize.tex.file(f.in,
+list.out <- rte.analyze.tex.file(f.in,
                                  latex.dir.out = 'latexOut',
                                  pdf.dir.out = 'PdfOut') 
 
 
 # Options for build.rdn.test
-list.in <- list.out       # output from rte.analize.tex.file
+list.in <- list.out       # output from rte.analyze.tex.file
 f.out <- 'MyRandomTest_'  # pattern for names of pdfs
 n.test <- 10            # number of random tests (usually the number of students) 
 n.question <- 4           # number of questions in each test 
@@ -145,9 +146,9 @@ list.build.rdn.exam <- rte.build.rdn.test(list.in = list.in,
                                           pdf.dir.out = pdf.dir.out) 
 ```
 
-The function `rte.analize.tex.file` will analyze the tex file and produce a R list with all of the details of the latex code. It will find and separate all of the multiple choice questions. I encourage the user to open the resulting list to see how all of the latex code is broken down into pieces. 
+The function `rte.analyze.tex.file` will analyze the tex file and produce a R list with all of the details of the latex code. It will find and separate all of the multiple choice questions. I encourage the user to open the resulting list to see how all of the latex code is broken down into pieces. 
 
-The function `rte.build.rdn.test` will use the output from `rte.analize.tex.file`, randomize all of the contents of the multiple choice questions and later paste together a new latex file used to compile the pdf files of the exam.
+The function `rte.build.rdn.test` will use the output from `rte.analyze.tex.file`, randomize all of the contents of the multiple choice questions and later paste together a new latex file used to compile the pdf files of the exam.
 
 The correct answer sheet for all versions is available in `list.build.rdn.exam$df.answer.wide`, where each row is the version of the test and the columns are the answers. The list output from `rte.build.rdn.test` should be locally saved as a .RDATA file with command `save` in order to be used later in the grading process. I also advice to use function `set.seed()` so that every run of the code always results in the same *random* answer sheet.
 
@@ -158,9 +159,9 @@ print(list.build.rdn.exam$answer.matrix)
 
 ## Grading exams
 
-The package `RndTexExams` also makes it easy to grade exams using R. This is specially helpful when integrating the submission of the student's answers with a cloud based spreadsheet service that allows the examiner to digitalize the answers of each student efficiently (details later). 
+The package `RndTexExams` also makes it easy to grade exams using R. This is specially helpful when integrating the submission of the student's answers with a cloud based spreadsheet service that allows the examiner to record and process the answers of each student efficiently (details later). 
 
-When examining a class with RndTexExam, one should have the following informations from the students:
+When examining a class with RndTexExam, one should have the following information from the students:
 
 - Names or ids of students in the test
 - The version of the exam for each student. By default, the version of the exam is printed in right bottom corner of the pdf
@@ -222,9 +223,9 @@ print(p)
 
 ### Integrating RndTexExam with google spreadsheets
 
-The use of RndTexExam is optimized when using a cloud based spreadsheet tool to register the answers for the students. This avoid the manual work usually needed to digitalize the information from the application of the exam. The package RndTexExam not only minimizes cheating but can also make the grading process painless. 
+The use of RndTexExam is optimized when using a cloud based spreadsheet tool to register the answers for the students. This avoid the manual work usually needed to process the information from the application of the exam. The package RndTexExam not only minimizes cheating but can also make the grading process painless. 
 
-The cloud services I currently use and recomend is  [Google Spreadsheets](https://www.google.com/sheets/about/) and [Google Forms](https://www.google.com/forms/about/). Both are free and easy to use. Next I present the steps I suggest in order to build a random exam and grade it using a spreadsheet in the cloud.
+The cloud services I currently use and recommend is  [Google Spreadsheets](https://www.google.com/sheets/about/) and [Google Forms](https://www.google.com/forms/about/). Both are free and easy to use. Next I present the steps I suggest in order to build a random exam and grade it using a spreadsheet in the cloud.
 
 1. Create a randomized exam with `rte.build.rdn.test`. Make sure you locally save the correct answer sheet for each version of the test (output `answer.matrix`). I also advice to use `set.seed()` in order to keep the same randomized content of the tests, just in case.
 1. Create a new form in Google Forms with the following questions (example [here](http://goo.gl/forms/a0TiUXjfc4):
@@ -235,23 +236,21 @@ The cloud services I currently use and recomend is  [Google Spreadsheets](https:
   
 2. In the day of the test, deliver the printed exams from step 1 and inform the students of the link previously created in Google forms, step 2. The site [tinyurl](http://tinyurl.com/) will help to create a customized human-readable link. I usually write the link in the blackboard so that only those that came to the exam can access it. Once the student finishes the exam, he/she can register their answers with their smartphones by accessing the link in a browser. I also bring a laptop with internet connection just in case that some students  don't have a smartphone. As a backup plan, make sure all students return the printed exams.
 
-3. Once all students have registered their answers, gain access to the spreadsheet in the cloud with package [googlesheets](https://github.com/jennybc/googlesheets). This way you can easily import the data from the cloud into R. I also advice to run a code to check the data in the cloud. Make sure that each student only has one registration and that the version of the test is unique for each. The link to the example spreadsheet previously created is [here](https://docs.google.com/spreadsheets/d/1Z4nA6p2pPvMl1dPXh17KQg4FCteGCAlCiHxNgQ8309s/edit?usp=sharing). See the vignette of `googlesheets` [here](https://cran.r-project.org/package=googlesheets) for examples of how to get access of a google spreadsheet.
+3. Once all students have registered their answers, gain access to the spreadsheet in the cloud with package [googlesheets](https://github.com/jennybc/googlesheets). This way you can easily import the data from the cloud into R. I also advice to run a code to check the data in the cloud. Make sure that each student only has one registration and that the version of the test is unique for each. The link to the example spreadsheet previously created is [here](https://docs.google.com/spreadsheets/d/1Z4nA6p2pPvMl1dPXh17KQg4FCteGCAlCiHxNgQ8309s/edit?usp=sharing). See the vignette of `googlesheets` [here](https://cran.r-project.org/package=googlesheets) for examples of how to get access of a Google spreadsheet.
 
 4. Use the information from the cloud and the correct answer sheet from step 1 with  `rte.grade.exams` in order to grade the exams and calculate the final score for each.
 
 # Getting started on your own test
 
-The easiest way to get started on your own test is to use [my example tex file](https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a) and change it to your needs. Do notice that some parts of the tex file are essential to RndTexExams. You can check these lines in the the comments of the example LaTeX file.
-
-Copy and paste the contents of the link into a new tex file, which we will assume is called `MyRandomTest.tex`. You can also download the gist file in R using:
+The easiest way to get started on your own test is to use the templates distributed at Gist [Gist](https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a). There you can find latex files for examdesign and exam. Download it or copy and paste the contents of the Gist file into a new tex file, which we will assume is called `MyRandomTest_examdesign.tex`. You can also download the examdesign gist file in R using:
 
 
 ```{r eval=FALSE}
 setwd('Your path goes here')
-download.file(url = 'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest.tex', destfile = 'MyRandomTest.tex' )
+download.file(url = 'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest_examdesign.tex', destfile = 'MyRandomTest_examdesign.tex' )
 ```
 
-Once you have the LaTeX file, run the following script to build 5 random tests, each with 4 questions:
+Once you have the Latex file, run the following script to build 5 random tests, each with 4 questions:
 
 ```{r eval=FALSE}
 library(RndTexExams)
@@ -259,14 +258,14 @@ library(RndTexExams)
 my.d <- 'Your folder to the tex file here!'
 setwd(my.d)
 
-f.in <- 'MyRandomTest.tex'
+f.in <- 'MyRandomTest_examdesign.tex'
 f.out <- 'RandomTest-'
 n.test <- 5
 n.question <- 4
 latex.dir.out <- 'latexOut'
 pdf.dir.out <- 'PdfOut'
 
-list.out <- rte.analize.tex.file(f.in,
+list.out <- rte.analyze.tex.file(f.in,
                                  latex.dir.out = latex.dir.out,
                                  pdf.dir.out = pdf.dir.out)
                                  
@@ -282,11 +281,11 @@ The five pdf files named RandomTest-1.pdf, RandomTest-2, and so on should be now
 
 ## Some advices
 
-* Always compile the source LaTeX files before using RndTexExams. This will help you to catch syntax problems. If the tex file is not compilable, R will thrown an error.
+* Always compile the source Latex files before using RndTexExams. This will help you to catch syntax problems. If the tex file is not compilable, R will thrown an error.
 
 * Since each test will have its own pdf, it might be best to combine them into one pdf for easier printing. You can use [pdftk](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/) for that.
 
-* The package will not modify any question outside of the multiple choice enviroment of the latex file. In the future I might address this issue by also alowing for the randomization of other types of questions besides multiple choice.
+* The package will not modify any question outside of the multiple choice environment of the latex file. In the future I might address this issue by also allowing for the randomization of other types of questions besides multiple choice.
 
-* By default, `examdesign` prints the answer sheet of each test. If you are printing the final version of exam, it is likelly that you don't want the correct anwers printed in the exam! Simply add `\NoKey` in the preamble of the latex file. The example latex file is already configured this way.
+* By default, `examdesign` prints the answer sheet of each test. If you are printing the final version of exam, it is likely that you don't want the correct answers printed in the exam! Simply add `\NoKey` in the preamble of the latex file. The example latex file is already configured this way.
 

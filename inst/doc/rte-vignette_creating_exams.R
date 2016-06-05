@@ -4,16 +4,16 @@ library(RndTexExams, quietly = TRUE)
 set.seed(10)
 
 # Get latex file from package
-f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 
 # Breakdown latex file into a a list 
-list.out <- rte.analize.tex.file(f.in,
+list.out <- rte.analyze.tex.file(f.in,
                                  latex.dir.out = 'latexOut',
                                  pdf.dir.out = 'PdfOut') 
 
 
 # Options for build.rdn.test
-list.in <- list.out       # output from rte.analize.tex.file
+list.in <- list.out       # output from rte.analyze.tex.file
 f.out <- 'MyRandomTest_'  # pattern for names of pdfs
 n.test <- 10            # number of random tests (usually the number of students) 
 n.question <- 4           # number of questions in each test 
@@ -75,7 +75,7 @@ print(p)
 
 ## ----eval=FALSE----------------------------------------------------------
 #  setwd('Your path goes here')
-#  download.file(url = 'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest.tex', destfile = 'MyRandomTest.tex' )
+#  download.file(url = 'https://gist.github.com/msperlin/ef1b93a8eb9026ba5e9a/raw/MyRandomTest_examdesign.tex', destfile = 'MyRandomTest_examdesign.tex' )
 
 ## ----eval=FALSE----------------------------------------------------------
 #  library(RndTexExams)
@@ -83,14 +83,14 @@ print(p)
 #  my.d <- 'Your folder to the tex file here!'
 #  setwd(my.d)
 #  
-#  f.in <- 'MyRandomTest.tex'
+#  f.in <- 'MyRandomTest_examdesign.tex'
 #  f.out <- 'RandomTest-'
 #  n.test <- 5
 #  n.question <- 4
 #  latex.dir.out <- 'latexOut'
 #  pdf.dir.out <- 'PdfOut'
 #  
-#  list.out <- rte.analize.tex.file(f.in,
+#  list.out <- rte.analyze.tex.file(f.in,
 #                                   latex.dir.out = latex.dir.out,
 #                                   pdf.dir.out = pdf.dir.out)
 #  

@@ -1,11 +1,11 @@
 #' Build random tests from LaTeX file
 #'
-#' This function will take as input a list from rte.analize.tex.file and use it
+#' This function will take as input a list from rte.analyze.tex.file and use it
 #' to build pdf files of random exams. See the package vignette for details on
 #' how to use it.
 #'
 #' @param list.in A list with all the information of the LaTeX file. Usually the
-#'   output from funtion rte.analize.tex.file()
+#'   output from funtion rte.analyze.tex.file()
 #' @param f.out The name for the pdf files (e.g. using f.out <- 'RdnTest_', the
 #'   code will create files 'RdnTest_1.pdf', 'RdnTest_2.pdf', and so on)
 #' @param n.test The number of random exams to be build (usually the number of
@@ -32,14 +32,14 @@
 #' latex.dir.out = 'latexOut' # Name of folder where latex files are going (will create if not exists)
 #' pdf.dir.out = 'PdfOut'     # Name of folder where resulting pdf files are going
 #' f.out <- 'MyRandomTest_'   # Name of pdfs (MyRandomTest_1.pdf, MyRandomTest_2.pdf, ... )
-#' n.test <- 2                # Number of tests to build
+#' n.test <- 1                # Number of tests to build
 #' n.question <- 2            # Number of questions in each test
 #'
 #' # Get latex example from package
-#' f.in <- system.file("extdata", "MyRandomTest.tex", package = "RndTexExams")
+#' f.in <- system.file("extdata", "MyRandomTest_examdesign.tex", package = "RndTexExams")
 #'
 #' # Break latex file into a R list
-#' list.out <- rte.analize.tex.file(f.in,
+#' list.out <- rte.analyze.tex.file(f.in,
 #'                                  latex.dir.out = latex.dir.out,
 #'                                  pdf.dir.out = pdf.dir.out)
 #'
@@ -69,7 +69,7 @@ rte.build.rdn.test <- function(list.in,
   # error catching (wrong number of questions)
 
   if (n.question> nrow(list.in$df.questions)){
-    stop('The number of questions in test (n.question) is higher than the number of questions found in dataframe')
+    stop('The number of mchoice questions in test (n.question) is higher than the number of mchoice questions found in dataframe')
   }
 
   # error catching (pdftex not available)
@@ -89,20 +89,31 @@ rte.build.rdn.test <- function(list.in,
   }
 
 
-  # END error checking
+  # END error checking here (many more within engines)
 
   df.questions <- list.in$df.questions
   df.answers <- list.in$df.answers
   my.preamble <- list.in$my.preamble
   my.last.part <- list.in$my.last.part
+  exam.class <- list.in$examclass
   my.begin.mchoice.line <- list.in$my.begin.mchoice.line
+
+  # str patterns for exam classes
+
+  l.def <- rte.get.classes.def(exam.class)
+
+  str.pattern.correct <- l.def$str.pattern.correct
+  str.pattern.choice <- l.def$str.pattern.choice
+  str.pattern.end.mchoice <- l.def$str.pattern.end.mchoice
+  str.pattern.end.question <- l.def$str.pattern.end.question
 
   df.out <- data.frame()
 
   cat('\nrte: pdflatex flavor:', rte.check.latex.flavor())
   cat('\nrte: Type of OS:', rte.check.my.os())
   cat('\nrte: Latex compile function:', latex.compile.fct)
-
+  cat('\nrte: Type of exam template:', exam.class)
+  cat('\nrte: Number of mchoice questions:', nrow(df.questions))
 
   for (i.test in seq(1,n.test)){
 
@@ -119,132 +130,113 @@ rte.build.rdn.test <- function(list.in,
     # Index to randomize questions
 
     if (do.randomize.questions){
-      my.rdn.idx.question <- sample(nrow(df.questions))[1:n.question]
+      my.rdn.idx.question <- sample(df.questions$n.question)
     } else {
-      my.rdn.idx.question <- 1:n.question
+      my.rdn.idx.question <- df.questions$n.question
     }
 
     my.tex.file <- paste0(my.temp_preamble,'\n',my.begin.mchoice.line)
-    my.correct.answer <- character()
+
+    correct.answer.original <- character()
+    correct.answer.rnd <- character()
     n.version <-c()
     n.possible.versions <-c()
 
     for (i.q in seq(1,n.question)){
 
+
       q.now <- my.rdn.idx.question[i.q]
 
-      q.text <- as.character(df.questions$main.text[q.now])
+      q.text <- as.character(df.questions$main.text[df.questions$n.question==q.now])
 
-      temp_answers <- df.answers[df.answers$n.question==q.now, ]
-      n.answers <- nrow(temp_answers)
+      q.answers <- df.answers[df.answers$n.question==q.now, ]$text.answer
+      n.answers <- length(q.answers)
 
+      # fix correct answers for different cases (use of [ver])
 
+      n.cases <- rte.get.n.cases(paste(q.text,q.answers,collapse = '\n'))
 
-      # Detect the existence of switch statemens in questions text
-
-      my.matches <- stringr::str_extract_all(q.text,pattern = '@(.*?)@')[[1]]
-      n.cases.qtext <-1
-      case.now <- 1
-
-      if (length(my.matches)>0){  # if found, fix it for case.now
-
-        n.cases.qtext <- nrow(stringr::str_locate_all(my.matches[1], pattern = '\\{(.*?)\\}')[[1]])
-
-        # select a random case
-
-        case.now <- sample(n.cases.qtext)[1]
-
-        n.matches <- length(my.matches)
-
-        # fix q.text for n cases
-
-        for (i.match in seq(1,n.matches)){
-
-          temp.split <- stringr::str_match_all(my.matches[i.match], pattern = '\\{(.*?)\\}')[[1]]
-
-          q.text <- sub(x = q.text,
-                        pattern = my.matches[i.match],
-                        replacement = temp.split[case.now,2],
-                        fixed = T )
-
-        }
-      }
-
-
-      # fix answers for different cases (switch @{}|{}@)
-
-      all_answers <- paste0(temp_answers$text.answer,collapse = '\n')
-
-      my.matches <- stringr::str_extract_all(all_answers,pattern = '@(.*?)@')[[1]]
-
-      n.cases.answers <- length(my.matches)
-      n.matches <- length(my.matches)
-
-
-      for (i.match in my.matches){
-
-        temp.split <- stringr::str_match_all(i.match, pattern = '\\{(.*?)\\}')[[1]]
-
-        all_answers <- sub(x = all_answers,
-                           pattern = i.match,
-                           replacement = temp.split[case.now,2],
-                           fixed = T )
-
-
-      }
-
-      temp_answers$text.answer <- stringr::str_split(all_answers, pattern = '\\n')[[1]]
-
-      # fix correct answers for different cases
-
-      idx.correct <-which(stringr::str_detect(temp_answers$text.answer, stringr::fixed(paste0('[',case.now,']'))))
-
-      n.cases.correct.answers <- sum(stringr::str_detect(temp_answers$text.answer, '\\[.*?\\]'))
-
-      for (i.cases in seq(n.cases.correct.answers)){
-        idx <-which(stringr::str_detect(temp_answers$text.answer, stringr::fixed(paste0('[',i.cases,']'))))
-
-        temp_answers$text.answer[idx] <- stringr::str_replace_all(string = temp_answers$text.answer[idx],
-                                                         pattern = stringr::fixed(paste0('[',i.cases,']')),
-                                                         replacement = '')
-
-      }
-
-      temp_answers$text.answer[idx.correct] <- sub(pattern = '\\choice{',
-                                                   x = temp_answers$text.answer[idx.correct],
-                                                   replacement = '\\choice[!]{',
-                                                   fixed= T)
-
-
-      my.tex.file <- paste0(my.tex.file, '\n', q.text)
-
-      # check for different versions
-
-      n.answers <- nrow(temp_answers)
 
       if (do.randomize.answers){
-        my.rdn.idx.answers <- sample(n.answers)
-      } else {my.rdn.idx.answers <- 1:n.answers}
+        case.now <- sample(seq(n.cases),1)
+        my.rdn.idx.answers <- sample(seq(n.answers))
+      } else {
+        case.now <- 1
+        my.rdn.idx.answers <- 1:n.answers
+      }
 
-      for (i.ans  in seq(1,n.answers)){
-        a.now <- my.rdn.idx.answers[i.ans]
-        a.text <- as.character(temp_answers$text.answer[a.now])
+      if (n.cases >1){
 
-        my.tex.file <- paste0(my.tex.file, '\n', a.text)
+        idx.correct.switch <-which(stringr::str_detect(q.answers, stringr::fixed(paste0('[',case.now,']'))))
+
+        n.cases.correct.answers <- sum(stringr::str_detect(q.answers, '\\[.*?\\]'))
+
+        if (is.na(n.cases.correct.answers)) n.cases.correct.answers <- 1
+
+        for (i.cases in seq(n.cases.correct.answers)){
+          idx <-which(stringr::str_detect(q.answers, stringr::fixed(paste0('[',i.cases,']'))))
+
+          q.answers[idx]<- stringr::str_replace_all(string = q.answers[idx],
+                                                    pattern = stringr::fixed(paste0('[',i.cases,']')),
+                                                    replacement = '')
+
+        }
+
+        # error control for use of correct choice and
+
+        idx.fix <- which(stringr::str_detect(q.answers, stringr::fixed(str.pattern.correct)))
+        q.answers[idx.fix] <- sub(pattern = str.pattern.correct,
+                                  x = q.answers[idx.fix],
+                                  replacement = str.pattern.choice,
+                                  fixed= T)
+
+
+
+        q.answers[idx.correct.switch] <- sub(pattern = str.pattern.choice,
+                                      x = q.answers[idx.correct.switch],
+                                      replacement = str.pattern.correct,
+                                      fixed= T)
 
       }
 
-      idx<-which(stringr::str_detect(temp_answers$text.answer[my.rdn.idx.answers],stringr::fixed('[!]')))
+      # correct answers in original file
 
-      my.correct.answer <- c(my.correct.answer, letters[idx])
+      idx.correct.original <-which(stringr::str_detect(q.answers, stringr::fixed(str.pattern.correct)))
+
+      out.list <- rte.The.Randomizer(q.text,q.answers, case.now, my.rdn.idx.answers)
+
+      full.question <- out.list$full.question
+      case.now <- out.list$case.now
+
+      # correct answers in randomized file
+
+      idx.correct.rnd <-which(stringr::str_detect(out.list$q.answers.rnd, stringr::fixed(str.pattern.correct)))
+
+
+      my.tex.file <- paste0(my.tex.file, '\n', full.question)
+
+      correct.answer.original <- c(correct.answer.original, letters[idx.correct.original])
+      correct.answer.rnd <- c(correct.answer.rnd, letters[idx.correct.rnd])
+
       n.version <-c(n.version,case.now)
-      n.possible.versions <- c(n.possible.versions, max(c(n.cases.qtext,n.cases.answers)))
+      n.possible.versions <- c(n.possible.versions, n.cases)
 
-      my.tex.file <- paste0(my.tex.file, '\n', '\\end{question} \n')
+      my.tex.file <- paste0(my.tex.file, '\n', str.pattern.end.question, '\n')
 
     }
 
-    my.tex.file <- paste0(my.tex.file, '\n', '\\end{multiplechoice}','\n',my.last.part)
+
+    # paste questions that are not mchoice at the end
+
+    if (exam.class =='exam'){
+
+      my.tex.file <- paste0(my.tex.file, '\n',
+                            paste(list.in$df.questions.not.mchoice$q.text,
+                                  collapse = '\n'), '\n')
+
+    }
+
+    my.tex.file <- paste0(my.tex.file, '\n', str.pattern.end.mchoice ,'\n',my.last.part)
 
     stringi::stri_write_lines(my.tex.file,fname = f.temp.tex, encoding = 'UTF-8')
 
@@ -258,7 +250,8 @@ rte.build.rdn.test <- function(list.in,
                                        rnd.idx.questions = my.rdn.idx.question,
                                        n.version = n.version,
                                        n.possible.versions = n.possible.versions,
-                                       correct.answer= my.correct.answer ))
+                                       correct.answer.original = correct.answer.original,
+                                       correct.answer.rnd= correct.answer.rnd))
 
     cat('Done')
   }
@@ -277,8 +270,8 @@ rte.build.rdn.test <- function(list.in,
   cat('\nrte: FINISHED - Check folder', pdf.dir.out, 'for pdf files')
 
   df.answer.wide <- data.table::dcast(data = data.table::data.table(df.out),
-                                 formula = n.test  ~ n.question,
-                                 fun.aggregate = function(x) return(x), value.var = 'correct.answer', fill = NA )
+                                      formula = n.test  ~ n.question,
+                                      fun.aggregate = function(x) return(x), value.var = 'correct.answer.rnd', fill = NA )
 
 
   answer.matrix <- as.matrix(as.data.frame(df.answer.wide)[,c(1+seq(n.question))])

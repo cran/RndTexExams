@@ -1,7 +1,13 @@
+### Version 1.4 (2016-06-05)
+
+  - Added new support for exam latex class. RndTexExam now works with examdesign and exam classes
+  - The rte_analyze_tex_file is now procedural, making it easier to debug and include new latex classes in the future
+  - Lots of new error checks in questions, making sure the latex file has all needed components
+
 ### Version 1.3.1 (2016-05-16)
 
-  - Added choice for omittion of cat() output in rte.test.cheating
-  - Added linux texlive requirements in vignette
+  - Added choice for omitting of cat() output in rte.test.cheating
+  - Added Linux texlive requirements in vignette
   - Removed texlive-lang-portuguese dependency in example latex file
 
 ### Version 1.3 (2016-05-03)
