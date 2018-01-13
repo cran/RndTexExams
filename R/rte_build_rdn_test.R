@@ -16,7 +16,7 @@
 #'   compilation should go (will create if not found)
 #' @param pdf.dir.out The name of the folder where the pdf files from the latex
 #'   compilation should go (will create if not found)
-#' @param latex.compile.fct Option for defining function that calls pdflatex ('texi2pdf' (default) or 'custom').
+#' @param latex.compile.fct Option for defining function that calls pdflatex: 'texi2pdf' or 'custom' (default).
 #' @param do.randomize.questions Do you want the order of the questions to be
 #'   random? (TRUE or FALSE)
 #' @param do.randomize.answers Do you want the order of the answers to be
@@ -58,7 +58,7 @@ rte.build.rdn.test <- function(list.in,
                                n.question,
                                latex.dir.out = 'latexOut',
                                pdf.dir.out = 'PdfOut',
-                               latex.compile.fct = 'texi2pdf',
+                               latex.compile.fct = 'custom',
                                do.randomize.questions=T,
                                do.randomize.answers=T,
                                do.clean.up = T){

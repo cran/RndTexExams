@@ -47,4 +47,3 @@ list.out <- rte.analyze.tex.file(f.in,
 
 print(list.out)
 }
-

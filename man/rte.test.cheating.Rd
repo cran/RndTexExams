@@ -80,4 +80,3 @@ df.grade <- cbind(data.frame(exam.names),correction.mat)
 
 test.cheating.out <- rte.test.cheating(df.grade, do.cheat.plot = FALSE )
 }
-

@@ -16,4 +16,3 @@ Function to check if system has pdflatex.exe available
 rte.check.pdflatex()
 
 }
-

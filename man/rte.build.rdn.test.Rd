@@ -6,7 +6,7 @@
 \usage{
 rte.build.rdn.test(list.in, f.out, n.test, n.question,
   latex.dir.out = "latexOut", pdf.dir.out = "PdfOut",
-  latex.compile.fct = "texi2pdf", do.randomize.questions = T,
+  latex.compile.fct = "custom", do.randomize.questions = T,
   do.randomize.answers = T, do.clean.up = T)
 }
 \arguments{
@@ -28,7 +28,7 @@ compilation should go (will create if not found)}
 \item{pdf.dir.out}{The name of the folder where the pdf files from the latex
 compilation should go (will create if not found)}
 
-\item{latex.compile.fct}{Option for defining function that calls pdflatex ('texi2pdf' (default) or 'custom').}
+\item{latex.compile.fct}{Option for defining function that calls pdflatex: 'texi2pdf' or 'custom' (default).}
 
 \item{do.randomize.questions}{Do you want the order of the questions to be
 random? (TRUE or FALSE)}
@@ -75,4 +75,3 @@ result.out <- rte.build.rdn.test(list.in = list.out,
                                  pdf.dir.out = pdf.dir.out)
 
 }
-

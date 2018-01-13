@@ -16,4 +16,3 @@ Function to check the distribution of LaTeX
 rte.check.latex.flavor()
 
 }
-

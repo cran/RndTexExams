@@ -30,4 +30,3 @@ my.rdn.idx.answers <- sample(seq(length(q.answers)))
 
 l.out <- rte.The.Randomizer(q.text,q.answers, case.now, my.rdn.idx.answers)
 }
-

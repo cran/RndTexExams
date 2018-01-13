@@ -124,21 +124,16 @@ rte.compile.latex <- function(f.in,
   if (latex.compile.fct=='texi2pdf'){
 
     # compile using tools::texi2pdf (new code in version 1.2)
-
-    tools::texi2pdf(file = f.in, clean = do.clean.up, quiet = T)
+    tools::texi2pdf(file = f.in, clean = do.clean.up, quiet = TRUE)
 
     # remove path and extension for checking pdf
-
     file.name.noext <- basename(tools::file_path_sans_ext(f.in))
 
     # copy pdf files to folder
-
     f.out.pdf <- paste0(file.name.noext,'.pdf')
-
     file.copy(from = f.out.pdf, to = pdf.dir.out )
 
     # delete pdf files manually
-
     file.remove(f.out.pdf)
 
   }

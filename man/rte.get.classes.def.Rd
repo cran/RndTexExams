@@ -19,4 +19,3 @@ This function outputs the main elements of each latex class such as question/cho
 l.out <- rte.get.classes.def(exam.class = 'exam')
 print(l.out)
 }
-

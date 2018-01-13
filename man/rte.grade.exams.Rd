@@ -79,4 +79,3 @@ list.grade <- rte.grade.exams(exam.names = my.names,
 
 print(list.grade$df.final.score)
 }
-

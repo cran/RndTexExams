@@ -23,4 +23,3 @@ Encoding(my.text) <- 'UTF-8'
 out <- engine.analyze.class.exam(my.text)
 
 }
-

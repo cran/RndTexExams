@@ -31,4 +31,3 @@ rte.compile.latex(f.in = f.in,
                  pdf.dir.out =  pdf.dir.out,latex.compile.fct = 'custom')
 
 }
-

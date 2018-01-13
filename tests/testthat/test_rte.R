@@ -28,6 +28,7 @@ result.out <- rte.build.rdn.test(list.in = list.out,
                                  latex.dir.out = latex.dir.out,
                                  pdf.dir.out = pdf.dir.out,
                                  do.randomize.questions=T,
+                                 latex.compile.fct = 'custom',
                                  do.randomize.answers=T,
                                  do.clean.up = T)
 

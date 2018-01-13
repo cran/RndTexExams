@@ -16,4 +16,3 @@ Function to check operating system of user
 rte.check.my.os()
 
 }
-

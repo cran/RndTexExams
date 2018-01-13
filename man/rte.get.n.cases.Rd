@@ -22,4 +22,3 @@ my.question <- 'My questions is ... @{ver1}|{ver2}@' ## two cases
 n.cases <- rte.get.n.cases(my.question)
 
 }
-
