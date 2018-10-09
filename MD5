@@ -1,6 +1,6 @@
-d7b606b67e829f2c8ea0f5277067a083 *DESCRIPTION
-42d682633cb191a7944b687ad9ff5310 *NAMESPACE
-463bc9b2440104df34b7284da5cc40fb *NEWS.md
+8e5035332562d3c735e02cfb36ef910f *DESCRIPTION
+6a40dea3ce846c9bd9291c2c2c7fc300 *NAMESPACE
+1ee5bf0866feb835bac88e628b158c6a *NEWS.md
 6178e3430fae447e6d795f52126db8ea *R/rte_The_Randomizer.R
 c4c7dd1e5f7ee58ba275f273458ff360 *R/rte_Utils.R
 797fd223a3f062db98a350a87f7c70f0 *R/rte_analyze_tex_file.R
@@ -8,14 +8,10 @@ c4c7dd1e5f7ee58ba275f273458ff360 *R/rte_Utils.R
 b9a0033df5256229f0f59a3d25227673 *R/rte_engine_exam.R
 9bfcad9d648d5407868ed7d0832ccba7 *R/rte_engine_examdesign.R
 083e5ff4df7bdf0b53319fc1cf0cc11b *R/rte_grade_exams.R
-e41dbdfc518a6d4fe69b6b208dc7e9a3 *R/rte_test_cheating.R
-710128dbf035690e07133c72510aea5d *build/vignette.rds
+9e82eec4b169541db1e95ac4cc55bab4 *build/vignette.rds
 2b7748d800846c1049f22ea3b9f34453 *inst/doc/rte-vignette_creating_exams.R
 803d5bd40136a5075b397e0d2d425797 *inst/doc/rte-vignette_creating_exams.Rmd
-0b0adce878812b972f121de9dd63f8f2 *inst/doc/rte-vignette_creating_exams.html
-1d36c7e5568b4fd7c37681f1f440b1aa *inst/doc/rte-vignette_testing_cheating.R
-4c74637f67ac347db433602b8fcf4f85 *inst/doc/rte-vignette_testing_cheating.Rmd
-c926df5d3634621dd7ee78f8b24ec087 *inst/doc/rte-vignette_testing_cheating.html
+15852343d2267f7316d9e9964fdff92f *inst/doc/rte-vignette_creating_exams.html
 e1e12dd2708446b1306710f55ad03bf4 *inst/extdata/MyRandomTest_exam.tex
 2799d20c1a275814424a339eec3ad12b *inst/extdata/MyRandomTest_examdesign.tex
 e8d528d731cb1ac1a572a849bf506c85 *man/engine.analyze.class.exam.Rd
@@ -30,8 +26,6 @@ b1310bcfef1ed71bbc605820d154085d *man/rte.compile.latex.Rd
 030ae2efaec55f9698f8e3e1ee6e42e0 *man/rte.get.classes.def.Rd
 c7bc0f247bfec11e0c16eb4dda07ab1b *man/rte.get.n.cases.Rd
 fa242e00fd2dd7da834a1584158298e8 *man/rte.grade.exams.Rd
-fe8b1cb2dfd73cc5cb179d1de51dddd9 *man/rte.test.cheating.Rd
 42ddc0245d124adeccac67cc02775eda *tests/testthat.R
 8e8d81bb03b1ecf4542bc7fd802c8fa0 *tests/testthat/test_rte.R
 803d5bd40136a5075b397e0d2d425797 *vignettes/rte-vignette_creating_exams.Rmd
-4c74637f67ac347db433602b8fcf4f85 *vignettes/rte-vignette_testing_cheating.Rmd

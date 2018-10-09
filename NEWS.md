@@ -1,3 +1,7 @@
+### Version 1.5 (2018-10-09)
+
+  - Removed functions for testing for cheating due to broken dependency.
+
 ### Version 1.4.1 (2018-01-13)
 
   - Found bug for tools::texi2pdf(). Seems to be an internal problem outside of RndTexExams, can't fix it: "mkdir: cannot create directory ‘Code/R’: No such file or directory".  The default is now using 'custom' call to pdflatex.
